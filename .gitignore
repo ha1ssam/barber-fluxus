@@ -11,3 +11,4 @@ services/whatsapp-gateway/node_modules/
 services/whatsapp-gateway/sessions/
 services/whatsapp-gateway/dist/
 uploads/
+prisma/seed.cjs

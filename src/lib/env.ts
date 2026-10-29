@@ -11,7 +11,8 @@ function required(name: string, devFallback: string): string {
 
 export const env = {
   get appUrl() {
-    return (process.env.APP_URL || 'http://localhost:3000').replace(/\/$/, '');
+    // No Render, RENDER_EXTERNAL_URL já vem com o endereço público do app.
+    return (process.env.APP_URL || process.env.RENDER_EXTERNAL_URL || 'http://localhost:3000').replace(/\/$/, '');
   },
   get appSecret() {
     return required('APP_SECRET', 'dev-secret-change-me-dev-secret-change-me');

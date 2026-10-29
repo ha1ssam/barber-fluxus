@@ -29,6 +29,15 @@ Página pública de exemplo: `http://localhost:3000/barbearia-do-ze`.
 
 Em desenvolvimento, sem gateway de WhatsApp configurado, as mensagens saem no log do servidor (`[whatsapp:simulado]`) e os e-mails também (`[email:simulado]`).
 
+### Testar pelo celular (Render, grátis)
+
+1. Entre em [render.com](https://render.com) com sua conta do GitHub.
+2. Toque em **New** > **Blueprint** e escolha o repositório `barber-fluxus` (branch `main`).
+3. Confirme em **Apply**. O Render cria o banco e o app sozinho; o primeiro deploy leva uns 5 a 10 minutos.
+4. Abra o endereço `https://fluxus-xxxx.onrender.com` que aparece no serviço `fluxus`.
+
+A loja de exemplo já vem criada (`/barbearia-do-ze`, login `ze@fluxus.dev` / `senha12345`). No plano grátis o app "dorme" depois de 15 minutos sem uso e leva uns 50 segundos para acordar, e o banco grátis expira depois de 30 dias. Sem WhatsApp configurado, as mensagens não são enviadas (aparecem como "não enviada" na tela de WhatsApp).
+
 ### Com Docker
 
 ```bash
