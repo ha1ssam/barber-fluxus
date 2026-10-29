@@ -59,7 +59,7 @@ export default async function Page_({ searchParams }: { searchParams: Promise<Re
         <EmptyState icon="calendar-check" title="Nenhum agendamento nesse filtro" text="Mude o período ou o status para ver outros agendamentos." />
       ) : (
         <div className="table-wrap">
-          <table className="fx-table">
+          <table className="fx-table responsive">
             <thead>
               <tr>
                 <th>Data</th>
@@ -76,26 +76,26 @@ export default async function Page_({ searchParams }: { searchParams: Promise<Re
                 const z = utcToZoned(a.startsAt, tz);
                 return (
                   <tr key={a.id}>
-                    <td className="nowrap">
+                    <td className="nowrap" data-label="Data">
                       <div className="strong">{formatDateBR(z.date).slice(0, 5)} · {minuteToHHMM(z.minute)}</div>
                       <div className="muted xs">{a.source === 'MANUAL' ? 'Manual' : a.source === 'WHATSAPP' ? 'WhatsApp' : 'Online'}</div>
                     </td>
-                    <td>
+                    <td data-label="Cliente">
                       <Link href={`/painel/clientes/${a.clientId}`} className="strong" style={{ color: 'var(--text)', textDecoration: 'none' }}>
                         {a.client.name}
                       </Link>
                       <div className="muted xs">{formatPhone(a.client.phone)}</div>
                     </td>
-                    <td>
+                    <td data-label="Serviços">
                       {a.services.map((s) => s.name).join(' + ')}
                       {a.notes ? <div className="muted xs">“{a.notes}”</div> : null}
                     </td>
-                    {all && options.professionals.length > 1 ? <td>{memberName(a.professional)}</td> : null}
-                    <td className="num nowrap">{formatBRL(a.totalPriceCents)}</td>
-                    <td>
+                    {all && options.professionals.length > 1 ? <td data-label="Profissional">{memberName(a.professional)}</td> : null}
+                    <td className="num nowrap" data-label="Valor">{formatBRL(a.totalPriceCents)}</td>
+                    <td data-label="Status">
                       <StatusBadge status={a.status} />
                     </td>
-                    <td>
+                    <td className="actions">
                       <AppointmentActions
                         options={options}
                         appt={{ id: a.id, status: a.status, ended: a.endsAt <= now, professionalId: a.professionalId, date: z.date, time: minuteToHHMM(z.minute), durationMinutes: a.totalDurationMinutes, clientName: a.client.name }}

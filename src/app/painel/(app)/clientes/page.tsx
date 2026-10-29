@@ -49,7 +49,7 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
         <EmptyState icon="group" title={q || sp.filtro ? 'Nenhum cliente encontrado' : 'Nenhum cliente ainda'} text={q || sp.filtro ? 'Tente outra busca ou filtro.' : 'O cliente entra aqui sozinho no primeiro agendamento.'} />
       ) : (
         <div className="table-wrap">
-          <table className="fx-table">
+          <table className="fx-table responsive">
             <thead>
               <tr>
                 <th>Nome</th>
@@ -63,17 +63,17 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
             <tbody>
               {clients.map((c) => (
                 <tr key={c.id}>
-                  <td>
+                  <td data-label="Nome">
                     <Link href={`/painel/clientes/${c.id}`} className="strong">
                       {c.name}
                     </Link>
                     {c.notes ? <div className="muted xs">{c.notes}</div> : null}
                   </td>
-                  <td className="nowrap">{formatPhone(c.phone)}</td>
-                  <td>{c.email ?? <span className="muted">—</span>}</td>
-                  <td className="num">{c._count.appointments}</td>
-                  <td>{c.appointments[0] ? formatDateBR(utcToZoned(c.appointments[0].startsAt, tz).date) : <span className="muted">—</span>}</td>
-                  <td className="num">{c.stamps}</td>
+                  <td className="nowrap" data-label="Telefone">{formatPhone(c.phone)}</td>
+                  <td data-label="E-mail">{c.email ?? <span className="muted">—</span>}</td>
+                  <td className="num" data-label="Agendamentos">{c._count.appointments}</td>
+                  <td data-label="Última visita">{c.appointments[0] ? formatDateBR(utcToZoned(c.appointments[0].startsAt, tz).date) : <span className="muted">—</span>}</td>
+                  <td className="num" data-label="Selos">{c.stamps}</td>
                 </tr>
               ))}
             </tbody>

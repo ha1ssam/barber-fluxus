@@ -38,7 +38,7 @@ export default async function CashPage({ searchParams }: { searchParams: Promise
             <EmptyState icon="wallet" title="Nenhuma venda neste dia" text="Ao concluir um atendimento, a venda entra aqui com a forma de pagamento." />
           ) : (
             <div className="table-wrap" style={{ border: 'none' }}>
-              <table className="fx-table">
+              <table className="fx-table responsive">
                 <thead>
                   <tr>
                     <th>Hora</th>
@@ -51,8 +51,8 @@ export default async function CashPage({ searchParams }: { searchParams: Promise
                 <tbody>
                   {s.sales.map((sale) => (
                     <tr key={sale.id}>
-                      <td>{time(sale.createdAt)}</td>
-                      <td>
+                      <td data-label="Hora">{time(sale.createdAt)}</td>
+                      <td data-label="Itens">
                         <div className="strong">{sale.items.map((i) => (i.quantity > 1 ? `${i.quantity}× ${i.description}` : i.description)).join(' + ')}</div>
                         <div className="muted xs">
                           {sale.client?.name ?? 'Venda avulsa'}
@@ -61,9 +61,9 @@ export default async function CashPage({ searchParams }: { searchParams: Promise
                           {sale.rewardRedeemed ? ' · prêmio fidelidade' : ''}
                         </div>
                       </td>
-                      <td>{PAYMENT_LABELS[sale.paymentMethod]}</td>
-                      <td className="num strong">{formatBRL(sale.totalCents)}</td>
-                      <td className="num">{ctx.membership.role === 'OWNER' ? <DeleteSaleButton saleId={sale.id} /> : null}</td>
+                      <td data-label="Pagamento">{PAYMENT_LABELS[sale.paymentMethod]}</td>
+                      <td className="num strong" data-label="Total">{formatBRL(sale.totalCents)}</td>
+                      <td className="num actions">{ctx.membership.role === 'OWNER' ? <DeleteSaleButton saleId={sale.id} /> : null}</td>
                     </tr>
                   ))}
                 </tbody>

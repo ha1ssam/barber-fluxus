@@ -1303,3 +1303,67 @@ img {
     font-size: 22px;
   }
 }
+
+/* Título da topbar nunca é coberto pelas ações */
+.fx-topbar-title h1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 480px) {
+  .fx-topbar-actions:has(.btn) {
+    width: 100%;
+  }
+}
+
+/* Tabelas viram cartões no celular (cada célula mostra o rótulo da coluna) */
+@media (max-width: 640px) {
+  .fx-table.responsive thead {
+    display: none;
+  }
+  .fx-table.responsive tr {
+    display: block;
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .fx-table.responsive tr:last-child {
+    border-bottom: none;
+  }
+  .fx-table.responsive td {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    justify-items: end;
+    align-items: center;
+    column-gap: var(--space-3);
+    border: none;
+    padding: var(--space-1) var(--space-4);
+    text-align: right;
+  }
+  .fx-table.responsive td::before {
+    grid-row: 1 / span 4;
+    justify-self: start;
+    align-self: start;
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    text-align: left;
+    flex-shrink: 0;
+  }
+  .fx-table.responsive td[data-label='']::before,
+  .fx-table.responsive td:not([data-label])::before {
+    display: none;
+  }
+  .fx-table.responsive td.actions {
+    display: block;
+    padding-top: var(--space-2);
+  }
+}
+
+/* Modais abertos de dentro de tabelas não herdam alinhamento da célula */
+.fx-modal-backdrop {
+  text-align: left;
+  white-space: normal;
+}

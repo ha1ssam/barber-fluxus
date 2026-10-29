@@ -31,7 +31,7 @@ export function Shell({ items, user, pendingCount, banner, shops, activeShopId, 
       setCollapsed(localStorage.getItem('fx-sidebar') === 'collapsed');
     } catch {}
   }, []);
-  const isActive = (href: string) => (href === '/painel' ? pathname === '/painel' : pathname.startsWith(href));
+  const isActive = (href: string) => pathname === href || (href !== '/painel' && pathname.startsWith(`${href}/`));
   let lastCat = '';
   const isCollapsed = collapsed && !drawer;
 
