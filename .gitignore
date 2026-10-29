@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+.env
+.env.local
+.DS_Store
+services/whatsapp-gateway/node_modules/
+services/whatsapp-gateway/sessions/
+services/whatsapp-gateway/dist/
+uploads/

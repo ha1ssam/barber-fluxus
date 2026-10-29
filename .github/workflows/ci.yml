@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  app:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: fluxus
+          POSTGRES_PASSWORD: fluxus
+          POSTGRES_DB: fluxus_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U fluxus"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://fluxus:fluxus@localhost:5432/fluxus_test
+      TEST_DATABASE_URL: postgresql://fluxus:fluxus@localhost:5432/fluxus_test
+      APP_SECRET: ci-secret-ci-secret-ci-secret-ci-secret
+      CRON_SECRET: ci-cron
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Tipos
+        run: npm run typecheck
+      - name: Testes de regras
+        run: npm test
+      - name: Testes com banco
+        run: npm run test:integration
+      - name: Build
+        run: npm run build
+
+  whatsapp-gateway:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/whatsapp-gateway
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test

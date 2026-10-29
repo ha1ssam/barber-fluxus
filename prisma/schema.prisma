@@ -1,0 +1,729 @@
+// Modelo de dados do Barber Fluxus.
+// Diferenças em relação ao Fluxus original (ver spec, "Pontos fracos"):
+// - A loja é uma entidade própria (Shop). Usuários entram nela por Membership com um papel.
+// - O cliente existe num cadastro só por loja (Client), ligado ao agendamento e, se houver, à conta.
+// - Grade de horários, intervalo entre clientes, turnos e fuso são configurações da loja.
+// - Sessão do WhatsApp, lembretes e mensagens pertencem à loja, não ao dono.
+// Valores em dinheiro são sempre centavos (Int).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  BARBER
+  RECEPTIONIST
+}
+
+enum BusinessType {
+  BARBERSHOP
+  SALON
+  AESTHETICS
+  NAILS
+  OTHER
+}
+
+enum ServiceCategory {
+  HAIRCUT
+  BEARD
+  EYEBROW
+  COMBO
+  HAIR
+  NAILS
+  SKIN
+  OTHER
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum AppointmentSource {
+  ONLINE
+  WHATSAPP
+  MANUAL
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  EXPIRED
+}
+
+enum CommissionType {
+  NONE
+  PERCENT
+  FIXED
+  CHAIR_RENT
+}
+
+enum PaymentMethod {
+  CASH
+  PIX
+  CREDIT
+  DEBIT
+  OTHER
+}
+
+enum SaleItemKind {
+  SERVICE
+  PRODUCT
+}
+
+enum CashMovementType {
+  EXPENSE
+  WITHDRAWAL
+  DEPOSIT
+}
+
+enum CouponType {
+  PERCENT
+  FIXED
+}
+
+enum LoyaltyReason {
+  VISIT
+  REFERRAL
+  REDEEM
+  ADJUST
+}
+
+enum MessageKind {
+  BOOKING_RECEIVED
+  CONFIRMATION
+  CANCELLATION
+  REMINDER
+  REMINDER_EVE
+  REVIEW_REQUEST
+  BIRTHDAY
+  WINBACK
+  WAITLIST
+  BOT
+}
+
+enum MessageStatus {
+  PENDING
+  SENT
+  FAILED
+  CANCELLED
+  SKIPPED
+}
+
+enum MessageDirection {
+  IN
+  OUT
+}
+
+enum WhatsAppMode {
+  QR
+  CLOUD_API
+}
+
+enum WhatsAppStatus {
+  DISCONNECTED
+  CONNECTING
+  QR
+  CONNECTED
+}
+
+enum WaitlistStatus {
+  WAITING
+  NOTIFIED
+  BOOKED
+  CANCELLED
+}
+
+enum AuthTokenKind {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+
+// ─── Contas ────────────────────────────────────────────────────────────────
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String
+  phone           String?
+  cpf             String?
+  passwordHash    String?
+  googleId        String?   @unique
+  emailVerifiedAt DateTime?
+  isStaff         Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  sessions          Session[]
+  authTokens        AuthToken[]
+  memberships       Membership[]
+  clients           Client[]
+  pushSubscriptions PushSubscription[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shopId    String? // loja ativa (um usuário pode estar em mais de uma)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model AuthToken {
+  id        String        @id @default(cuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      AuthTokenKind
+  tokenHash String        @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime      @default(now())
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+}
+
+// ─── Loja (tenant) ─────────────────────────────────────────────────────────
+
+model Shop {
+  id           String       @id @default(cuid())
+  slug         String       @unique
+  name         String
+  businessType BusinessType @default(BARBERSHOP)
+  description  String?
+  phone        String?
+  email        String?
+  addressLine  String?
+  neighborhood String?
+  city         String?
+  state        String? // UF
+  zipCode      String?
+  logoUrl      String?
+  coverUrl     String?
+  instagram    String?
+  facebook     String?
+  tiktok       String?
+
+  paymentMethods String[] @default([])
+  amenities      String[] @default([])
+
+  // Agenda
+  timezone          String  @default("America/Sao_Paulo")
+  slotInterval      Int     @default(30) // 10, 15, 20 ou 30 minutos
+  bufferMinutes     Int     @default(0) // intervalo entre clientes
+  minAdvanceMinutes Int     @default(30) // antecedência mínima para reservar online
+  maxAdvanceDays    Int     @default(60)
+  autoConfirm       Boolean @default(false)
+
+  // Vitrine
+  showReviews     Boolean @default(true)
+  listedInExplore Boolean @default(true)
+
+  // Comissão padrão (cada profissional pode ter a sua)
+  // PERCENT: value em centésimos de % (4000 = 40%). FIXED: centavos por serviço. CHAIR_RENT: centavos por mês.
+  commissionType           CommissionType @default(PERCENT)
+  commissionValue          Int            @default(5000)
+  productCommissionPercent Int            @default(0) // centésimos de %
+
+  // Fidelidade
+  loyaltyEnabled        Boolean @default(true)
+  loyaltyStampsRequired Int     @default(10)
+  loyaltyReward         String  @default("1 corte grátis")
+  referralEnabled       Boolean @default(true)
+  referralBonusStamps   Int     @default(1)
+
+  // Mensagens automáticas
+  reminderHoursBefore Int @default(3)
+  reminderEveHour     Int @default(20)
+  winbackDays         Int @default(45)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships      Membership[]
+  invitations      Invitation[]
+  services         Service[]
+  clients          Client[]
+  appointments     Appointment[]
+  timeBlocks       TimeBlock[]
+  reviews          Review[]
+  waitlist         WaitlistEntry[]
+  products         Product[]
+  cashRegisters    CashRegister[]
+  sales            Sale[]
+  cashMovements    CashMovement[]
+  coupons          Coupon[]
+  loyaltyEvents    LoyaltyEvent[]
+  messageTemplates MessageTemplate[]
+  scheduled        ScheduledMessage[]
+  messageLogs      MessageLog[]
+  whatsapp         WhatsAppConnection?
+  bots             BotConversation[]
+  subscription     Subscription?
+  trialTrackers    TrialTracker[]
+
+  @@index([state, city])
+}
+
+model Membership {
+  id                   String          @id @default(cuid())
+  shopId               String
+  shop                 Shop            @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  userId               String
+  user                 User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role                 Role
+  isProfessional       Boolean         @default(true) // atende clientes (aparece na agenda)
+  displayName          String?
+  pictureUrl           String?
+  active               Boolean         @default(true)
+  canManageOwnSchedule Boolean         @default(true)
+  canManageOwnServices Boolean         @default(false)
+  commissionType       CommissionType? // null = usa o padrão da loja
+  commissionValue      Int?
+  createdAt            DateTime        @default(now())
+
+  workingHours WorkingHours[]
+  services     ProfessionalService[]
+  appointments Appointment[]
+  timeBlocks   TimeBlock[]
+  saleItems    SaleItem[]
+  sales        Sale[]
+  waitlist     WaitlistEntry[]
+
+  @@unique([shopId, userId])
+}
+
+model Invitation {
+  id          String    @id @default(cuid())
+  shopId      String
+  shop        Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  email       String
+  role        Role
+  tokenHash   String    @unique
+  invitedById String
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([shopId])
+}
+
+// Expediente de um profissional. Várias linhas no mesmo dia = vários turnos (o intervalo entre elas é o almoço).
+model WorkingHours {
+  id           String     @id @default(cuid())
+  membershipId String
+  membership   Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  weekday      Int // 0 = domingo
+  startMinute  Int // minutos desde 00:00
+  endMinute    Int
+
+  @@index([membershipId, weekday])
+}
+
+// ─── Serviços ──────────────────────────────────────────────────────────────
+
+model Service {
+  id              String          @id @default(cuid())
+  shopId          String
+  shop            Shop            @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  name            String
+  description     String?
+  category        ServiceCategory @default(HAIRCUT)
+  priceCents      Int
+  durationMinutes Int
+  active          Boolean         @default(true)
+  sortOrder       Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  professionals ProfessionalService[]
+  items         AppointmentService[]
+  saleItems     SaleItem[]
+
+  @@index([shopId, active])
+}
+
+model ProfessionalService {
+  membershipId String
+  membership   Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  serviceId    String
+  service      Service    @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([membershipId, serviceId])
+}
+
+// ─── Clientes ──────────────────────────────────────────────────────────────
+
+model Client {
+  id           String    @id @default(cuid())
+  shopId       String
+  shop         Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  name         String
+  phone        String // só dígitos, com DDI (5511987654321)
+  email        String?
+  birthDate    DateTime? @db.Date
+  notes        String?
+  userId       String?
+  user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  stamps       Int       @default(0)
+  referralCode String    @unique
+  referredById String?
+  referredBy   Client?   @relation("Referral", fields: [referredById], references: [id], onDelete: SetNull)
+  referrals    Client[]  @relation("Referral")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  appointments  Appointment[]
+  reviews       Review[]
+  sales         Sale[]
+  loyaltyEvents LoyaltyEvent[]
+  waitlist      WaitlistEntry[]
+
+  @@unique([shopId, phone])
+  @@index([shopId, name])
+  @@index([userId])
+}
+
+// ─── Agendamentos ──────────────────────────────────────────────────────────
+
+model Appointment {
+  id                   String            @id @default(cuid())
+  shopId               String
+  shop                 Shop              @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  professionalId       String
+  professional         Membership        @relation(fields: [professionalId], references: [id], onDelete: NoAction)
+  clientId             String
+  client               Client            @relation(fields: [clientId], references: [id], onDelete: NoAction)
+  startsAt             DateTime
+  endsAt               DateTime
+  status               AppointmentStatus @default(PENDING)
+  source               AppointmentSource @default(ONLINE)
+  totalPriceCents      Int
+  totalDurationMinutes Int
+  notes                String?
+  publicToken          String            @unique // link do cliente para ver, cancelar e avaliar
+  createdById          String?
+  confirmedAt          DateTime?
+  cancelledAt          DateTime?
+  cancelledByClient    Boolean           @default(false)
+  completedAt          DateTime?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+
+  services  AppointmentService[]
+  sale      Sale?
+  review    Review?
+  scheduled ScheduledMessage[]
+
+  @@index([shopId, startsAt])
+  @@index([professionalId, startsAt])
+  @@index([clientId])
+}
+
+// Cópia do serviço no momento da reserva (preço e duração não mudam se o cardápio mudar).
+model AppointmentService {
+  id              String      @id @default(cuid())
+  appointmentId   String
+  appointment     Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  serviceId       String
+  service         Service     @relation(fields: [serviceId], references: [id], onDelete: NoAction)
+  name            String
+  priceCents      Int
+  durationMinutes Int
+}
+
+model TimeBlock {
+  id             String     @id @default(cuid())
+  shopId         String
+  shop           Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  professionalId String
+  professional   Membership @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  startsAt       DateTime
+  endsAt         DateTime
+  reason         String?
+  createdAt      DateTime   @default(now())
+
+  @@index([professionalId, startsAt])
+}
+
+model Review {
+  id            String      @id @default(cuid())
+  shopId        String
+  shop          Shop        @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  appointmentId String      @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  clientId      String
+  client        Client      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  rating        Int
+  comment       String?
+  hidden        Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+
+  @@index([shopId, createdAt])
+}
+
+model WaitlistEntry {
+  id             String         @id @default(cuid())
+  shopId         String
+  shop           Shop           @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  professionalId String?
+  professional   Membership?    @relation(fields: [professionalId], references: [id], onDelete: SetNull)
+  clientId       String
+  client         Client         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  date           String // AAAA-MM-DD no fuso da loja
+  serviceIds     String[]
+  status         WaitlistStatus @default(WAITING)
+  notifiedAt     DateTime?
+  createdAt      DateTime       @default(now())
+
+  @@index([shopId, date, status])
+}
+
+// ─── Financeiro ────────────────────────────────────────────────────────────
+
+model Product {
+  id         String     @id @default(cuid())
+  shopId     String
+  shop       Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  name       String
+  priceCents Int
+  active     Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+  saleItems  SaleItem[]
+
+  @@index([shopId, active])
+}
+
+model CashRegister {
+  id           String         @id @default(cuid())
+  shopId       String
+  shop         Shop           @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  openedAt     DateTime       @default(now())
+  openedById   String
+  openingCents Int
+  closedAt     DateTime?
+  closedById   String?
+  countedCents Int?
+  notes        String?
+  sales        Sale[]
+  movements    CashMovement[]
+
+  @@index([shopId, openedAt])
+}
+
+model Sale {
+  id             String        @id @default(cuid())
+  shopId         String
+  shop           Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  registerId     String?
+  register       CashRegister? @relation(fields: [registerId], references: [id], onDelete: SetNull)
+  appointmentId  String?       @unique
+  appointment    Appointment?  @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  clientId       String?
+  client         Client?       @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  professionalId String?
+  professional   Membership?   @relation(fields: [professionalId], references: [id], onDelete: SetNull)
+  subtotalCents  Int
+  discountCents  Int           @default(0)
+  totalCents     Int
+  paymentMethod  PaymentMethod
+  couponId       String?
+  coupon         Coupon?       @relation(fields: [couponId], references: [id], onDelete: SetNull)
+  rewardRedeemed Boolean       @default(false)
+  createdById    String
+  createdAt      DateTime      @default(now())
+  items          SaleItem[]
+
+  @@index([shopId, createdAt])
+}
+
+model SaleItem {
+  id             String       @id @default(cuid())
+  saleId         String
+  sale           Sale         @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  kind           SaleItemKind
+  serviceId      String?
+  service        Service?     @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  productId      String?
+  product        Product?     @relation(fields: [productId], references: [id], onDelete: SetNull)
+  professionalId String?
+  professional   Membership?  @relation(fields: [professionalId], references: [id], onDelete: SetNull)
+  description    String
+  quantity       Int          @default(1)
+  unitCents      Int
+  totalCents     Int
+}
+
+model CashMovement {
+  id          String           @id @default(cuid())
+  shopId      String
+  shop        Shop             @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  registerId  String?
+  register    CashRegister?    @relation(fields: [registerId], references: [id], onDelete: SetNull)
+  type        CashMovementType
+  amountCents Int
+  description String
+  createdById String
+  createdAt   DateTime         @default(now())
+
+  @@index([shopId, createdAt])
+}
+
+// ─── Fidelidade ────────────────────────────────────────────────────────────
+
+model Coupon {
+  id         String     @id @default(cuid())
+  shopId     String
+  shop       Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  code       String
+  type       CouponType
+  value      Int // PERCENT: centésimos de % ; FIXED: centavos
+  validUntil DateTime?
+  maxUses    Int?
+  uses       Int        @default(0)
+  active     Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+  sales      Sale[]
+
+  @@unique([shopId, code])
+}
+
+model LoyaltyEvent {
+  id            String        @id @default(cuid())
+  shopId        String
+  shop          Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  clientId      String
+  client        Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  delta         Int
+  reason        LoyaltyReason
+  appointmentId String?
+  createdAt     DateTime      @default(now())
+
+  @@index([clientId])
+}
+
+// ─── WhatsApp e mensagens ──────────────────────────────────────────────────
+
+model MessageTemplate {
+  id      String      @id @default(cuid())
+  shopId  String
+  shop    Shop        @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  kind    MessageKind
+  enabled Boolean     @default(true)
+  body    String
+
+  @@unique([shopId, kind])
+}
+
+// Fila de saída (outbox): toda mensagem automática passa por aqui e é enviada pelo worker.
+model ScheduledMessage {
+  id            String        @id @default(cuid())
+  shopId        String
+  shop          Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  kind          MessageKind
+  toPhone       String
+  body          String
+  sendAt        DateTime
+  status        MessageStatus @default(PENDING)
+  attempts      Int           @default(0)
+  lastError     String?
+  sentAt        DateTime?
+  appointmentId String?
+  appointment   Appointment?  @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  clientId      String?
+  dedupeKey     String?       @unique
+  createdAt     DateTime      @default(now())
+
+  @@index([status, sendAt])
+  @@index([shopId, createdAt])
+}
+
+model MessageLog {
+  id        String           @id @default(cuid())
+  shopId    String
+  shop      Shop             @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  direction MessageDirection
+  phone     String
+  body      String
+  kind      MessageKind?
+  createdAt DateTime         @default(now())
+
+  @@index([shopId, createdAt])
+}
+
+model WhatsAppConnection {
+  shopId              String         @id
+  shop                Shop           @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  mode                WhatsAppMode   @default(QR)
+  status              WhatsAppStatus @default(DISCONNECTED)
+  phone               String?
+  qr                  String?
+  cloudPhoneNumberId  String?
+  cloudAccessTokenEnc String?
+  updatedAt           DateTime       @updatedAt
+}
+
+// Estado da conversa do robô fica no banco: reiniciar o serviço não perde conversas.
+model BotConversation {
+  id         String    @id @default(cuid())
+  shopId     String
+  shop       Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  phone      String
+  state      Json
+  humanUntil DateTime?
+  updatedAt  DateTime  @updatedAt
+
+  @@unique([shopId, phone])
+}
+
+// ─── Assinatura do SaaS ────────────────────────────────────────────────────
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  shopId               String             @unique
+  shop                 Shop               @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  plan                 String             @default("equipe")
+  status               SubscriptionStatus @default(TRIALING)
+  trialEndsAt          DateTime
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  stripeCustomerId     String?            @unique
+  stripeSubscriptionId String?            @unique
+  updatedAt            DateTime           @updatedAt
+}
+
+// Antifraude do teste grátis: o mesmo CPF ou IP não ganha um segundo teste.
+model TrialTracker {
+  id        String   @id @default(cuid())
+  cpf       String?
+  ip        String?
+  shopId    String
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([cpf])
+  @@index([ip])
+}

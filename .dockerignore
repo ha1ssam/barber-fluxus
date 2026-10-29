@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+.env
+.env.*
+uploads
+coverage
+tests
+services/whatsapp-gateway/node_modules
+services/whatsapp-gateway/sessions

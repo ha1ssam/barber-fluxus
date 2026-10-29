@@ -1,0 +1,19 @@
+{
+  "name": "fluxus-whatsapp-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Conexão de WhatsApp por QR Code (Baileys), uma sessão por loja. Repassa mensagens para o app.",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "6.7.24",
+    "pino": "9.7.0"
+  }
+}

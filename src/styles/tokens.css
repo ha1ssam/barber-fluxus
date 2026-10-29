@@ -1,0 +1,164 @@
+/* Fluxus UI tokens — copiado do UI kit (project/tokens.css), gerado de tokens.json */
+:root, [data-theme="light"] {
+  --bg: #f5f5f7;
+  --surface-raised: #ffffff;
+  --surface-muted: #f5f5f7;
+  --surface-subtle: #fafafa;
+  --surface-sunken: #f0f0f2;
+  --tab-active: var(--surface-raised);
+  --text: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-disabled: #c7c7cc;
+  --border: #d2d2d7;
+  --border-strong: #8e8e93;
+  --brand: #6656e2;
+  --brand-text: #6656e2;
+  --brand-tint: rgba(102,86,226,0.10);
+  --brand-tint-subtle: rgba(102,86,226,0.05);
+  --on-color: #ffffff;
+  --success: #1f7f37;
+  --success-text: #1f7f37;
+  --success-tint: rgba(31,127,55,0.08);
+  --success-tint-subtle: rgba(31,127,55,0.05);
+  --danger: #d70015;
+  --danger-text: #d70015;
+  --danger-tint: rgba(215,0,21,0.08);
+  --danger-tint-subtle: rgba(215,0,21,0.04);
+  --warning: #c26100;
+  --warning-text: #a85100;
+  --warning-tint: rgba(168,81,0,0.10);
+  --warning-tint-subtle: rgba(168,81,0,0.05);
+  --focus-ring: var(--brand);
+  --scrim: rgba(0,0,0,0.35);
+  --sidebar-bg: #1d1d1f;
+  --sidebar-border: #2d2d30;
+  --sidebar-text: rgba(255,255,255,0.55);
+  --sidebar-text-strong: #ffffff;
+  --sidebar-accent: #9a90f3;
+  --topbar-bg: rgba(245,245,247,0.72);
+  --msg-outgoing-bg: rgba(52,199,89,0.06);
+  --msg-incoming-bg: #f0f0f2;
+  --whatsapp: #25d366;
+  --hero-fallback: #4a3db8;
+  --mk-bg: #08080c;
+  --mk-text: #e5e7ef;
+  --mk-heading: #f0eef6;
+  --mk-brand: #6b58ee;
+  --mk-brand-soft: #a78bfa;
+  --mk-error: #ff6b5a;
+  --mk-input-bg: rgba(255,255,255,0.03);
+  --mk-line: rgba(255,255,255,0.08);
+  --mk-line-strong: rgba(255,255,255,0.38);
+  --mk-label: rgba(255,255,255,0.6);
+  --mk-muted: rgba(255,255,255,0.55);
+  --shadow: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-overlay: 0 8px 32px rgba(0,0,0,0.12);
+  --shadow-tab-active: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-section: 0 2px 12px rgba(0,0,0,0.03);
+  --shadow-knob: 0 2px 8px rgba(0,0,0,0.15);
+  --shadow-select-ring: 0 0 0 3px rgba(102,86,226,0.16);
+  --shadow-avatar: 0 4px 20px rgba(0,0,0,0.3);
+  --shadow-drawer: 4px 0 24px rgba(0,0,0,0.25);
+}
+[data-theme="dark"] {
+  --bg: #0c0c0e;
+  --surface-raised: #1c1c1e;
+  --surface-muted: #2c2c2e;
+  --surface-subtle: #161618;
+  --surface-sunken: #252528;
+  --tab-active: #3a3a3c;
+  --text: #f5f5f7;
+  --text-secondary: #98989d;
+  --text-disabled: #48484a;
+  --border: #38383a;
+  --border-strong: #7c7c80;
+  --brand: #6656e2;
+  --brand-text: #9a90f3;
+  --brand-tint: rgba(154,144,243,0.16);
+  --brand-tint-subtle: rgba(154,144,243,0.08);
+  --on-color: #ffffff;
+  --success: #1f7f37;
+  --success-text: #30d158;
+  --success-tint: rgba(48,209,88,0.14);
+  --success-tint-subtle: rgba(48,209,88,0.07);
+  --danger: #d70015;
+  --danger-text: #ff6961;
+  --danger-tint: rgba(255,105,97,0.14);
+  --danger-tint-subtle: rgba(255,105,97,0.07);
+  --warning: #ff9f0a;
+  --warning-text: #ff9f0a;
+  --warning-tint: rgba(255,159,10,0.14);
+  --warning-tint-subtle: rgba(255,159,10,0.07);
+  --focus-ring: var(--brand-text);
+  --scrim: rgba(0,0,0,0.6);
+  --sidebar-bg: #141416;
+  --sidebar-border: #232325;
+  --sidebar-text: rgba(255,255,255,0.55);
+  --sidebar-text-strong: #ffffff;
+  --sidebar-accent: #9a90f3;
+  --topbar-bg: rgba(12,12,14,0.72);
+  --msg-outgoing-bg: rgba(48,209,88,0.12);
+  --msg-incoming-bg: #252528;
+  --whatsapp: #25d366;
+  --hero-fallback: #4a3db8;
+  --mk-bg: #08080c;
+  --mk-text: #e5e7ef;
+  --mk-heading: #f0eef6;
+  --mk-brand: #6b58ee;
+  --mk-brand-soft: #a78bfa;
+  --mk-error: #ff6b5a;
+  --mk-input-bg: rgba(255,255,255,0.03);
+  --mk-line: rgba(255,255,255,0.08);
+  --mk-line-strong: rgba(255,255,255,0.38);
+  --mk-label: rgba(255,255,255,0.6);
+  --mk-muted: rgba(255,255,255,0.55);
+  --shadow: 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-overlay: 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-tab-active: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-section: 0 2px 12px rgba(0,0,0,0.03);
+  --shadow-knob: 0 2px 8px rgba(0,0,0,0.15);
+  --shadow-select-ring: 0 0 0 3px rgba(154,144,243,0.24);
+  --shadow-avatar: 0 4px 20px rgba(0,0,0,0.3);
+  --shadow-drawer: 4px 0 24px rgba(0,0,0,0.25);
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --sidebar-width: 240px;
+  --sidebar-collapsed: 64px;
+  --page-max: 1140px;
+  --booking-aside: 340px;
+  --touch-target: 44px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+}
+.hero-name { font-family: var(--font-sans); font-size: 26px; font-weight: 900; line-height: 1.2; }
+.kpi-value { font-family: var(--font-sans); font-size: 26px; font-weight: 800; line-height: 1.5; }
+.section-title { font-family: var(--font-sans); font-size: 17px; font-weight: 800; line-height: 1.3; }
+.modal-title { font-family: var(--font-sans); font-size: 16px; font-weight: 700; line-height: 1.3; }
+.price { font-family: var(--font-sans); font-size: 15px; font-weight: 800; line-height: 1.5; }
+.body { font-family: var(--font-sans); font-size: 14px; font-weight: 500; line-height: 1.5; }
+.ui { font-family: var(--font-sans); font-size: 13px; font-weight: 600; line-height: 1.5; }
+.field-label { font-family: var(--font-sans); font-size: 13px; font-weight: 700; line-height: 1.5; letter-spacing: 0.2px; }
+.small { font-family: var(--font-sans); font-size: 12px; font-weight: 600; line-height: 1.5; }
+.eyebrow { font-family: var(--font-sans); font-size: 11px; font-weight: 600; line-height: 1.5; letter-spacing: 0.8px; }
+.kpi-label { font-family: var(--font-sans); font-size: 11px; font-weight: 700; line-height: 1.5; letter-spacing: 0.5px; }
+.nav-category { font-family: var(--font-sans); font-size: 10px; font-weight: 700; line-height: 1.5; letter-spacing: 1.2px; }
+.mk-hero { font-family: var(--font-display); font-size: 72px; font-weight: 700; line-height: 1.02; letter-spacing: -0.03em; }
+.mk-section { font-family: var(--font-display); font-size: 44px; font-weight: 700; line-height: 1.3; letter-spacing: -0.03em; }
+.mk-price { font-family: var(--font-display); font-size: 36px; font-weight: 700; line-height: 1.3; }
+.mk-auth-title { font-family: var(--font-display); font-size: 28px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; }
+.mk-card-title { font-family: var(--font-display); font-size: 18px; font-weight: 600; line-height: 1.3; }
+.mk-feature-title { font-family: var(--font-display); font-size: 16px; font-weight: 600; line-height: 1.3; }
+.mk-lead { font-family: var(--font-display); font-size: 17px; font-weight: 400; line-height: 1.7; }
+.mk-label { font-family: var(--font-display); font-size: 12px; font-weight: 600; line-height: 1.5; letter-spacing: 1px; }
