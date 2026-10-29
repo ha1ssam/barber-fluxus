@@ -32,14 +32,14 @@ export function MemberRow({ member, isSelf }: { member: Member; isSelf: boolean 
   const { run, pending, error, setError } = useAction();
   return (
     <tr>
-      <td>
+      <td data-label="">
         <div className="strong">{member.name}{isSelf ? ' (você)' : ''}</div>
         <div className="muted xs">{member.email}</div>
       </td>
-      <td>{member.roleLabel}</td>
-      <td>{member.isProfessional ? 'Sim' : 'Não'}</td>
-      <td className="xs">{member.commissionText}</td>
-      <td className="num">
+      <td data-label="Papel">{member.roleLabel}</td>
+      <td data-label="Atende">{member.isProfessional ? 'Sim' : 'Não'}</td>
+      <td data-label="Comissão" className="xs">{member.commissionText}</td>
+      <td className="actions num">
         <div className="row" style={{ justifyContent: 'flex-end' }}>
           <Button size="sm" variant="ghost" icon="edit" onClick={() => setOpen(true)}>
             Editar

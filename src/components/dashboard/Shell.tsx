@@ -48,8 +48,7 @@ export function Shell({ items, user, pendingCount, banner, shops, activeShopId, 
               {isCollapsed ? null : (
                 <button
                   type="button"
-                  className="fx-nav-item"
-                  style={{ width: 28, height: 28, minHeight: 28, padding: 0, justifyContent: 'center', border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.04)', borderRadius: 6 }}
+                  className="fx-nav-item fx-sidebar-toggle"
                   aria-label={drawer ? 'Fechar menu' : 'Recolher menu'}
                   onClick={() => {
                     if (drawer) return setDrawer(false);

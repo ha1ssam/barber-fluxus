@@ -24,7 +24,7 @@ export default async function TeamPage() {
       {!teamAllowed ? <FeatureLocked feature="Equipe" reason={ctx.plan.active ? 'O plano Essencial tem 1 profissional. Mude para o Equipe para convidar até 5 profissionais e recepcionistas.' : ctx.plan.reason} /> : null}
       <Card title="Pessoas">
         <div className="table-wrap" style={{ border: 'none' }}>
-          <table className="fx-table">
+          <table className="fx-table responsive">
             <thead>
               <tr>
                 <th>Nome</th>

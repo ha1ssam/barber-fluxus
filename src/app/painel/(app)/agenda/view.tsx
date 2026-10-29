@@ -119,7 +119,7 @@ export function AgendaView({
               return (
                 <div key={r.time} className="agenda-row">
                   <div className="agenda-time">{r.time}</div>
-                  <div className={`agenda-cell ${SLOT_CLASS[a.status] ?? ''}`} style={{ flexWrap: 'wrap' }}>
+                  <div className={`agenda-cell appt-item ${SLOT_CLASS[a.status] ?? ''}`}>
                     <div className="grow">
                       <div className="row">
                         <span className="agenda-appt-name">{a.clientName}</span>
@@ -133,10 +133,12 @@ export function AgendaView({
                         <Icon name="whatsapp" size={12} /> {formatPhone(a.phone)}
                       </a>
                     </div>
-                    <AppointmentActions
+                    <div className="appt-actions">
+                      <AppointmentActions
                       options={options}
                       appt={{ id: a.id, status: a.status, ended: a.ended, professionalId, date, time: a.range.slice(0, 5), durationMinutes: a.durationMinutes, clientName: a.clientName }}
                     />
+                    </div>
                   </div>
                 </div>
               );

@@ -22,7 +22,7 @@ export function ProductsClient({ products }: { products: Product[] }) {
         <EmptyState icon="package" title="Nenhum produto" text="Cadastre o que você vende no balcão para lançar no caixa." />
       ) : (
         <div className="table-wrap">
-          <table className="fx-table">
+          <table className="fx-table responsive">
             <thead>
               <tr>
                 <th>Produto</th>
@@ -36,14 +36,14 @@ export function ProductsClient({ products }: { products: Product[] }) {
             <tbody>
               {products.map((p) => (
                 <tr key={p.id} style={{ opacity: p.active ? 1 : 0.6 }}>
-                  <td className="strong">{p.name}</td>
-                  <td className="num price-text">{formatBRL(p.priceCents)}</td>
-                  <td className="num">{p.soldQty}</td>
-                  <td className="num">{formatBRL(p.soldCents)}</td>
-                  <td>
+                  <td data-label="Produto" className="strong">{p.name}</td>
+                  <td data-label="Preço" className="num price-text">{formatBRL(p.priceCents)}</td>
+                  <td data-label="Vendidos" className="num">{p.soldQty}</td>
+                  <td data-label="Faturado" className="num">{formatBRL(p.soldCents)}</td>
+                  <td data-label="Ativo">
                     <Toggle checked={p.active} onChange={(e) => run(() => saveProductAction({ id: p.id, name: p.name, priceCents: p.priceCents, active: e.target.checked }))} label={<span className="sr-only">Ativo</span>} />
                   </td>
-                  <td className="num">
+                  <td className="actions num">
                     <Button size="sm" variant="ghost" icon="edit" onClick={() => setEditing(p)}>
                       Editar
                     </Button>

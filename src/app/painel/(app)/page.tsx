@@ -93,7 +93,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
               {stats.todayAppts.map((a) => {
                 const z = utcToZoned(a.startsAt, ctx.shop.timezone);
                 return (
-                  <li key={a.id} className="list-item" style={{ flexWrap: 'wrap' }}>
+                  <li key={a.id} className="list-item appt-item">
                     <span className="time-pill">{minuteToHHMM(z.minute)}</span>
                     <div className="grow">
                       <div className="strong">{a.client.name}</div>
@@ -103,6 +103,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
                       </div>
                     </div>
                     <StatusBadge status={a.status} />
+                    <div className="appt-actions">
                     <AppointmentActions
                       options={options}
                       appt={{
@@ -116,6 +117,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
                         clientName: a.client.name,
                       }}
                     />
+                    </div>
                   </li>
                 );
               })}

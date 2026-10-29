@@ -69,6 +69,7 @@ img {
 .grow {
   flex: 1;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 .text-right {
   text-align: right;
@@ -184,6 +185,7 @@ img {
 
 /* ── Tabelas ── */
 .table-wrap {
+  container-type: inline-size;
   overflow-x: auto;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -383,12 +385,17 @@ img {
 /* ── Painel: conteúdo ── */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: var(--space-3);
+}
+/* Valores em reais não quebram linha dentro do KPI */
+.kpi-value {
+  white-space: nowrap;
+  font-size: 24px;
 }
 .grid-2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
   gap: var(--space-4);
   align-items: start;
 }
@@ -403,17 +410,6 @@ img {
     grid-template-columns: minmax(0, 1fr);
   }
 }
-@media (max-width: 480px) {
-  .grid-2 {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .kpi-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .kpi-value {
-    font-size: 20px;
-  }
-}
 .toolbar {
   display: flex;
   align-items: flex-end;
@@ -421,7 +417,8 @@ img {
   flex-wrap: wrap;
 }
 .toolbar .field {
-  min-width: 160px;
+  flex: 1 1 160px;
+  max-width: 240px;
 }
 .link-box {
   display: flex;
@@ -1226,40 +1223,123 @@ img {
   }
 }
 
-/* Mais espaço entre seções no celular */
-@media (max-width: 480px) {
-  .bp-steps-bar {
-    padding: var(--space-3);
-  }
-  .fx-modal-foot {
-    flex-wrap: wrap;
-  }
-  .fx-modal-foot .btn {
-    flex: 1;
-  }
-}
+/* ═══════════════════════════════════════════════════════════════════════════
+   Ajustes de consistência e responsividade (auditoria de UI)
+   ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Ícone-botão nunca encolhe dentro de barras flex */
+.btn-icon {
+  flex-shrink: 0;
+}
+/* Rótulo longo quebra linha em vez de vazar do container */
+.btn {
+  max-width: 100%;
+}
 /* Logo escuro no tema claro e branco no tema escuro */
 [data-theme='dark'] .logo-light {
   filter: invert(1) brightness(2);
 }
-
-/* KPIs: valores em reais não quebram linha */
-.kpi-grid {
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-}
-.kpi-value {
-  white-space: nowrap;
-  font-size: 24px;
-}
 /* Abas em pílula não esticam dentro de colunas flex */
-.stack > .pill-tabs,
-.stack-lg > .pill-tabs,
-.stack-sm > .pill-tabs {
+:is(.stack, .stack-lg, .stack-sm) > .pill-tabs {
   align-self: flex-start;
 }
+/* Modais abertos de dentro de tabelas não herdam alinhamento da célula */
+.fx-modal-backdrop {
+  text-align: left;
+  white-space: normal;
+}
+/* Título da topbar nunca é coberto pelas ações */
+.fx-topbar-title h1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Textos de mensagem (WhatsApp) com links longos quebram dentro do card */
+.msg-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 
+/* Item de agendamento em lista (dashboard): ações descem para a linha de baixo quando falta espaço */
+.appt-item {
+  flex-wrap: wrap;
+}
+.appt-item > .grow {
+  flex: 1 1 180px;
+}
+.appt-item > .appt-actions {
+  margin-left: auto;
+}
+
+/* Tabelas: colunas com conteúdo de pessoa/serviço não espremem; ações quebram em linhas */
+.fx-table td.col-wide {
+  min-width: 140px;
+}
+.fx-table td.actions .row {
+  justify-content: flex-end;
+  margin-left: auto;
+  max-width: 260px;
+}
+
+/* Tabelas viram cartões quando o espaço do container é pequeno (com ou sem sidebar) */
+@container (max-width: 820px) {
+  .fx-table.responsive thead {
+    display: none;
+  }
+  .fx-table.responsive tbody {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  }
+  /* Divisória à direita e embaixo de cada cartão (sem bloco vazio quando sobra coluna) */
+  .fx-table.responsive tr {
+    display: block;
+    padding: var(--space-3) 0;
+    box-shadow: 1px 1px 0 var(--border);
+  }
+  .fx-table.responsive tr.total-row {
+    grid-column: 1 / -1;
+  }
+  .fx-table.responsive td {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    justify-items: end;
+    align-items: center;
+    column-gap: var(--space-3);
+    border: none;
+    padding: var(--space-1) var(--space-4);
+    text-align: right;
+    min-width: 0;
+  }
+  .fx-table.responsive td::before {
+    grid-row: 1 / span 4;
+    justify-self: start;
+    align-self: start;
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    text-align: left;
+  }
+  .fx-table.responsive td:is([data-label=''], :not([data-label]))::before {
+    display: none;
+  }
+  .fx-table.responsive td.actions {
+    display: block;
+    padding-top: var(--space-2);
+  }
+  .fx-table.responsive td.actions .row {
+    max-width: none;
+  }
+}
+
+/* Celular */
 @media (max-width: 480px) {
+  .grid-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .kpi-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-2);
@@ -1273,6 +1353,20 @@ img {
   .kpi-card .kpi-icon {
     display: none;
   }
+  /* Filtros em grade de 2 colunas, com o mesmo tamanho */
+  .toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: end;
+  }
+  .toolbar .field {
+    max-width: none;
+    min-width: 0;
+  }
+  .toolbar > :not(.field) {
+    grid-column: 1 / -1;
+  }
+  /* Topbar: título em cima, ações quebram em linhas (nada fica escondido por rolagem) */
   .fx-topbar {
     flex-wrap: wrap;
     row-gap: var(--space-2);
@@ -1284,15 +1378,15 @@ img {
   .fx-topbar-title .page-badge {
     display: none;
   }
-  .fx-topbar-actions {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    max-width: 100%;
-    scrollbar-width: none;
+  .fx-topbar-actions:has(.btn) {
+    width: 100%;
   }
   .fx-topbar-actions .btn {
     padding-left: var(--space-3);
     padding-right: var(--space-3);
+  }
+  .btn {
+    white-space: normal;
   }
   .bp-avatar {
     width: 64px;
@@ -1302,68 +1396,125 @@ img {
   .hero-name {
     font-size: 22px;
   }
-}
-
-/* Título da topbar nunca é coberto pelas ações */
-.fx-topbar-title h1 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-@media (max-width: 480px) {
-  .fx-topbar-actions:has(.btn) {
-    width: 100%;
+  .bp-steps-bar {
+    padding: var(--space-3);
+  }
+  .fx-modal-foot {
+    flex-wrap: wrap;
+  }
+  .fx-modal-foot .btn {
+    flex: 1;
   }
 }
 
-/* Tabelas viram cartões no celular (cada célula mostra o rótulo da coluna) */
-@media (max-width: 640px) {
-  .fx-table.responsive thead {
-    display: none;
+/* Botão de recolher/fechar a sidebar */
+.fx-nav-item.fx-sidebar-toggle {
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+}
+
+/* Telas de toque: alvos de pelo menos 36px nos botões compactos e 40px nos demais */
+@media (pointer: coarse) {
+  .fx-nav-item.fx-sidebar-toggle {
+    width: 40px;
+    height: 40px;
   }
-  .fx-table.responsive tr {
-    display: block;
-    padding: var(--space-3) 0;
-    border-bottom: 1px solid var(--border);
+  .agenda-cell .free-btn {
+    min-height: 36px;
   }
-  .fx-table.responsive tr:last-child {
-    border-bottom: none;
-  }
-  .fx-table.responsive td {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    justify-items: end;
+  /* Links de texto dentro de listas, tabelas e formulários ganham área de toque */
+  :where(.fx-table td, .agenda-cell, .list-item, .fx-auth, .mk-nav-links, .public-narrow .card) a {
+    display: inline-flex;
     align-items: center;
-    column-gap: var(--space-3);
-    border: none;
-    padding: var(--space-1) var(--space-4);
-    text-align: right;
+    gap: var(--space-1);
+    min-height: 32px;
   }
-  .fx-table.responsive td::before {
-    grid-row: 1 / span 4;
-    justify-self: start;
-    align-self: start;
-    content: attr(data-label);
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-secondary);
-    text-align: left;
-    flex-shrink: 0;
+  .btn {
+    min-height: 40px;
   }
-  .fx-table.responsive td[data-label='']::before,
-  .fx-table.responsive td:not([data-label])::before {
-    display: none;
+  .btn-sm {
+    min-height: 36px;
   }
-  .fx-table.responsive td.actions {
-    display: block;
-    padding-top: var(--space-2);
+  .btn-icon {
+    width: 40px;
+    height: 40px;
+  }
+  .pill-tab {
+    min-height: 36px;
+  }
+  .fx-nav-item {
+    min-height: 44px;
+  }
+  .form-input {
+    min-height: 44px;
   }
 }
 
-/* Modais abertos de dentro de tabelas não herdam alinhamento da célula */
-.fx-modal-backdrop {
-  text-align: left;
-  white-space: normal;
+/* Cabeçalho público: logo e ações quebram em linhas no celular */
+.public-header nav {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+@media (max-width: 520px) {
+  .public-header-inner {
+    flex-wrap: wrap;
+  }
+}
+
+/* Login e cadastro no celular: a marca aparece acima do formulário (a coluna da arte some) */
+.auth-mobile-brand {
+  display: none;
+}
+@media (max-width: 860px) {
+  .auth-form-side {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--space-8);
+    padding-top: var(--space-8);
+  }
+  .auth-mobile-brand {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    padding: 0 var(--space-8);
+  }
+  .auth-mobile-brand img {
+    height: 26px;
+    display: block;
+  }
+}
+
+/* Horário de atendimento: dia em cima, turnos em linhas que se ajustam à largura */
+.hours-day {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-3);
+}
+.hours-shift {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.hours-shift .form-input {
+  flex: 0 1 132px;
+  min-width: 116px;
+}
+@media (max-width: 560px) {
+  .hours-day {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Os dois horários dividem a linha; remover e "+ Turno" descem quando não cabem */
+  .hours-shift .form-input {
+    flex: 1 1 116px;
+  }
 }

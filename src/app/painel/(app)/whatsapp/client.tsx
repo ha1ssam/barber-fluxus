@@ -195,7 +195,7 @@ export function PushCard({ vapidKey }: { vapidKey: string }) {
             toast(err ? 'error' : 'success', err ?? 'Notificações ativadas neste aparelho.');
           }}
         >
-          {vapidKey ? 'Ativar neste aparelho' : 'Notificações não configuradas no servidor'}
+          {vapidKey ? 'Ativar neste aparelho' : 'Indisponível neste servidor'}
         </Button>
       </div>
     </Card>

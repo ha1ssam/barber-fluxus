@@ -17,7 +17,13 @@ export function AuthLayout({ children, title, text }: { children: ReactNode; tit
         <img className="auth-art-mark" src="/logos/fluxus-icon-white.svg" alt="" />
         <span style={{ fontSize: 13, color: 'var(--mk-muted)' }}>© {new Date().getFullYear()} Fluxus</span>
       </aside>
-      <main className="auth-form-side">{children}</main>
+      <main className="auth-form-side">
+        <Link href="/" className="auth-mobile-brand" aria-label="Fluxus">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logos/fluxus-full.svg" alt="Fluxus" />
+        </Link>
+        {children}
+      </main>
     </div>
   );
 }

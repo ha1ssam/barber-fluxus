@@ -1,6 +1,7 @@
 'use client';
 // Componentes do UI kit Fluxus com estado.
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { Icon, type IconName } from './Icon';
 import { IconButton } from './basic';
 import { cx } from './cx';
@@ -205,21 +206,30 @@ export function Modal({
   children?: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  // onClose costuma ser uma função nova a cada render; guardar numa ref evita refazer os efeitos.
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+  // Renderiza no <body>: um ancestral com backdrop-filter/transform (ex.: a topbar) prenderia o position: fixed.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose?.();
+      if (e.key === 'Escape') closeRef.current?.();
     };
     document.addEventListener('keydown', onKey);
-    ref.current?.querySelector<HTMLElement>('input, select, textarea, button:not([aria-label="Fechar"])')?.focus();
     return () => document.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
-  if (!open) return null;
-  return (
+  }, [open]);
+  // Foca o primeiro campo só quando o modal abre (não a cada digitação).
+  useEffect(() => {
+    if (open && mounted) ref.current?.querySelector<HTMLElement>('input, select, textarea, button:not([aria-label="Fechar"])')?.focus();
+  }, [open, mounted]);
+  if (!open || !mounted) return null;
+  return createPortal(
     <div
       className="fx-modal-backdrop"
       onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose?.();
+        if (e.target === e.currentTarget) closeRef.current?.();
       }}
     >
       <div ref={ref} className={cx('fx-modal', wide && 'wide', danger && 'danger')} role="dialog" aria-modal="true" aria-label={title}>
@@ -230,12 +240,13 @@ export function Modal({
               {title}
             </h3>
           </div>
-          <IconButton icon="x" label="Fechar" onClick={onClose} iconSize={20} />
+          <IconButton icon="x" label="Fechar" onClick={() => closeRef.current?.()} iconSize={20} />
         </div>
         <div className="fx-modal-body">{children}</div>
         {footer ? <div className="fx-modal-foot">{footer}</div> : null}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

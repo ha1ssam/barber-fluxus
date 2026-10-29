@@ -65,7 +65,7 @@ export default async function LoyaltyPage() {
             <EmptyState icon="purchase-tag" title="Nenhum cupom" text="Crie cupons para campanhas no Instagram ou para clientes sumidos. O desconto é aplicado no caixa." />
           ) : (
             <div className="table-wrap">
-              <table className="fx-table">
+              <table className="fx-table responsive">
                 <thead>
                   <tr>
                     <th>Código</th>
@@ -78,14 +78,14 @@ export default async function LoyaltyPage() {
                 <tbody>
                   {coupons.map((c) => (
                     <tr key={c.id}>
-                      <td className="strong">{c.code}</td>
-                      <td>{c.type === 'PERCENT' ? formatPercent(c.value) : formatBRL(c.value)}</td>
-                      <td className="num">
+                      <td data-label="Código" className="strong">{c.code}</td>
+                      <td data-label="Desconto">{c.type === 'PERCENT' ? formatPercent(c.value) : formatBRL(c.value)}</td>
+                      <td data-label="Usos" className="num">
                         {c.uses}
                         {c.maxUses ? ` / ${c.maxUses}` : ''}
                       </td>
-                      <td>{c.validUntil ? formatDateBR(utcToZoned(c.validUntil, ctx.shop.timezone).date) : 'Sem validade'}</td>
-                      <td>
+                      <td data-label="Validade">{c.validUntil ? formatDateBR(utcToZoned(c.validUntil, ctx.shop.timezone).date) : 'Sem validade'}</td>
+                      <td data-label="Ativo">
                         <CouponToggle id={c.id} active={c.active} />
                       </td>
                     </tr>

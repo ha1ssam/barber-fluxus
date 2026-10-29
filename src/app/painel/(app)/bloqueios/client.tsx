@@ -64,7 +64,7 @@ export function BlocksClient({
       ) : null}
       {rows.length ? (
         <div className="table-wrap">
-          <table className="fx-table">
+          <table className="fx-table responsive">
             <thead>
               <tr>
                 <th>Data</th>
@@ -77,11 +77,11 @@ export function BlocksClient({
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id}>
-                  <td className="strong">{r.date}</td>
-                  <td>{r.range}</td>
-                  {showProfessional ? <td>{r.professional}</td> : null}
-                  <td>{r.reason}</td>
-                  <td className="num">
+                  <td data-label="Data" className="strong">{r.date}</td>
+                  <td data-label="Horário">{r.range}</td>
+                  {showProfessional ? <td data-label="Profissional">{r.professional}</td> : null}
+                  <td data-label="Motivo">{r.reason}</td>
+                  <td className="actions num">
                     {canEdit ? (
                       <Button size="sm" variant="ghost" icon="trash" onClick={() => run(() => deleteBlockAction(r.id))}>
                         Remover

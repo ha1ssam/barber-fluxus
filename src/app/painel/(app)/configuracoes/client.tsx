@@ -225,20 +225,19 @@ export function HoursForm({ membershipId, professionals, initial, canEdit }: { m
           const day = days.find((d) => d.weekday === wd)!;
           const open = day.shifts.length > 0;
           return (
-            <div key={wd} className="row" style={{ alignItems: 'flex-start', borderBottom: '1px solid var(--border)', paddingBottom: 12 }}>
-              <div style={{ width: 130, paddingTop: 6 }}>
+            <div key={wd} className="hours-day">
+              <div style={{ paddingTop: 4 }}>
                 <Toggle label={WEEKDAY_NAMES[wd]} checked={open} onChange={(e) => update(wd, () => (e.target.checked ? [{ start: 9 * 60, end: 18 * 60 }] : []))} />
               </div>
-              <div className="stack-sm grow">
+              <div className="stack-sm">
                 {open ? (
                   day.shifts.map((s, i) => (
-                    <div key={i} className="row">
+                    <div key={i} className="hours-shift">
                       <Input
                         type="time"
                         aria-label="Início"
                         value={minuteToHHMM(s.start)}
                         onChange={(e) => update(wd, (xs) => xs.map((x, j) => (j === i ? { ...x, start: hhmmToMinute(e.target.value) ?? x.start } : x)))}
-                        style={{ width: 120 }}
                       />
                       <span className="muted">até</span>
                       <Input
@@ -246,7 +245,6 @@ export function HoursForm({ membershipId, professionals, initial, canEdit }: { m
                         aria-label="Fim"
                         value={minuteToHHMM(s.end)}
                         onChange={(e) => update(wd, (xs) => xs.map((x, j) => (j === i ? { ...x, end: hhmmToMinute(e.target.value) ?? x.end } : x)))}
-                        style={{ width: 120 }}
                       />
                       {day.shifts.length > 1 ? <IconButton icon="trash" label="Remover turno" onClick={() => update(wd, (xs) => xs.filter((_, j) => j !== i))} /> : null}
                       {i === day.shifts.length - 1 && day.shifts.length < 3 ? (
@@ -257,7 +255,7 @@ export function HoursForm({ membershipId, professionals, initial, canEdit }: { m
                     </div>
                   ))
                 ) : (
-                  <span className="muted sm-text" style={{ paddingTop: 8 }}>
+                  <span className="muted sm-text" style={{ paddingTop: 10 }}>
                     Fechado
                   </span>
                 )}

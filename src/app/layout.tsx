@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Manrope, Space_Grotesk } from 'next/font/google';
+import Script from 'next/script';
 import '@/styles/tokens.css';
 import '@/styles/fluxus.css';
 import '@/styles/app.css';
@@ -32,10 +33,10 @@ const themeScript = `try{var t=localStorage.getItem('fx-theme');if(!t){t=matchMe
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${manrope.variable} ${grotesk.variable}`} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
       <body>
+        <Script id="fx-theme" strategy="beforeInteractive">
+          {themeScript}
+        </Script>
         <ToastProvider>{children}</ToastProvider>
         <ServiceWorker />
       </body>

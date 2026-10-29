@@ -38,7 +38,7 @@ export default async function CommissionsPage({ searchParams }: { searchParams: 
       ) : (
         <Card>
           <div className="table-wrap" style={{ border: 'none' }}>
-            <table className="fx-table">
+            <table className="fx-table responsive">
               <thead>
                 <tr>
                   <th>Profissional</th>
@@ -53,20 +53,20 @@ export default async function CommissionsPage({ searchParams }: { searchParams: 
               <tbody>
                 {rows.map((r) => (
                   <tr key={r.membership.id}>
-                    <td className="strong">{r.name}</td>
-                    <td className="xs">{COMMISSION_LABELS[r.type]} · {ruleText(r.type, r.value)}</td>
-                    <td className="num">{r.production.serviceCount}</td>
-                    <td className="num">{formatBRL(r.production.serviceRevenueCents)}</td>
-                    <td className="num">{formatBRL(r.production.productRevenueCents)}</td>
-                    <td className="num strong success-text">{formatBRL(r.professionalCents)}</td>
-                    <td className="num">{formatBRL(r.shopCents)}</td>
+                    <td data-label="Profissional" className="strong">{r.name}</td>
+                    <td data-label="Regra" className="xs">{r.type === 'NONE' ? COMMISSION_LABELS.NONE : `${COMMISSION_LABELS[r.type]} · ${ruleText(r.type, r.value)}`}</td>
+                    <td data-label="Atendimentos" className="num">{r.production.serviceCount}</td>
+                    <td data-label="Serviços" className="num">{formatBRL(r.production.serviceRevenueCents)}</td>
+                    <td data-label="Produtos" className="num">{formatBRL(r.production.productRevenueCents)}</td>
+                    <td data-label="A pagar" className="num strong success-text">{formatBRL(r.professionalCents)}</td>
+                    <td data-label="Fica com a loja" className="num">{formatBRL(r.shopCents)}</td>
                   </tr>
                 ))}
-                <tr>
-                  <td className="strong" colSpan={3}>Total</td>
-                  <td className="num strong" colSpan={2}>{formatBRL(totals.prod)}</td>
-                  <td className="num strong">{formatBRL(totals.pro)}</td>
-                  <td className="num strong">{formatBRL(totals.shop)}</td>
+                <tr className="total-row">
+                  <td data-label="" className="strong" colSpan={3}>Total</td>
+                  <td data-label="Produção" className="num strong" colSpan={2}>{formatBRL(totals.prod)}</td>
+                  <td data-label="A pagar" className="num strong">{formatBRL(totals.pro)}</td>
+                  <td data-label="Fica com a loja" className="num strong">{formatBRL(totals.shop)}</td>
                 </tr>
               </tbody>
             </table>

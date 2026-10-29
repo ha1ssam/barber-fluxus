@@ -85,7 +85,7 @@ export default async function WhatsAppPage() {
                     <div className="xs muted">
                       {l.direction === 'OUT' ? 'Enviada para' : 'Recebida de'} {formatPhone(l.phone)} · {formatDateTimeBR(l.createdAt, tz)}
                     </div>
-                    <div className="sm-text" style={{ whiteSpace: 'pre-wrap' }}>{l.body}</div>
+                    <div className="sm-text msg-body">{l.body}</div>
                   </div>
                 </li>
               ))}

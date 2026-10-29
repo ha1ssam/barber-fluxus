@@ -36,7 +36,7 @@ export function ServicesClient({ services, professionals, canEdit }: { services:
         <EmptyState icon="cut" title="Nenhum serviço cadastrado" text="Sem serviços, sua página não aceita reservas. Comece pelo corte." action={canEdit ? <Button onClick={() => setEditing('new')}>Cadastrar serviço</Button> : undefined} />
       ) : (
         <div className="table-wrap">
-          <table className="fx-table">
+          <table className="fx-table responsive">
             <thead>
               <tr>
                 <th>Serviço</th>
@@ -51,7 +51,7 @@ export function ServicesClient({ services, professionals, canEdit }: { services:
             <tbody>
               {services.map((s, i) => (
                 <tr key={s.id} style={{ opacity: s.active ? 1 : 0.6 }}>
-                  <td>
+                  <td data-label="Serviço">
                     <div className="row" style={{ flexWrap: 'nowrap' }}>
                       <Icon name={CATEGORY_ICONS[s.category] ?? 'cut'} size={18} style={{ color: 'var(--text-secondary)' }} />
                       <div>
@@ -60,15 +60,15 @@ export function ServicesClient({ services, professionals, canEdit }: { services:
                       </div>
                     </div>
                   </td>
-                  <td>{CATEGORY_LABELS[s.category]}</td>
-                  <td className="num">{formatDuration(s.durationMinutes)}</td>
-                  <td className="num price-text">{formatBRL(s.priceCents)}</td>
+                  <td data-label="Tipo">{CATEGORY_LABELS[s.category]}</td>
+                  <td data-label="Duração" className="num">{formatDuration(s.durationMinutes)}</td>
+                  <td data-label="Preço" className="num price-text">{formatBRL(s.priceCents)}</td>
                   {professionals.length > 1 ? (
-                    <td className="xs">{s.professionalIds.length === professionals.length ? 'Todos' : professionals.filter((p) => s.professionalIds.includes(p.id)).map((p) => p.name.split(' ')[0]).join(', ')}</td>
+                    <td data-label="Quem faz" className="xs">{s.professionalIds.length === professionals.length ? 'Todos' : professionals.filter((p) => s.professionalIds.includes(p.id)).map((p) => p.name.split(' ')[0]).join(', ')}</td>
                   ) : null}
-                  <td>{canEdit ? <Toggle checked={s.active} onChange={(e) => run(() => toggleServiceAction(s.id, e.target.checked))} label={<span className="sr-only">Ativo</span>} /> : s.active ? 'Sim' : 'Não'}</td>
+                  <td data-label="Ativo">{canEdit ? <Toggle checked={s.active} onChange={(e) => run(() => toggleServiceAction(s.id, e.target.checked))} label={<span className="sr-only">Ativo</span>} /> : s.active ? 'Sim' : 'Não'}</td>
                   {canEdit ? (
-                    <td className="num">
+                    <td className="actions num">
                       <div className="row" style={{ justifyContent: 'flex-end', flexWrap: 'nowrap' }}>
                         <IconButton icon="chevron-up" label="Subir" onClick={() => !pending && i > 0 && run(() => moveServiceAction(s.id, -1))} />
                         <IconButton icon="chevron-down" label="Descer" onClick={() => !pending && run(() => moveServiceAction(s.id, 1))} />

@@ -35,7 +35,7 @@ export default async function WaitlistPage() {
         <EmptyState icon="list-ul" title="Ninguém na fila" text="Quando o dia que o cliente quer está cheio, ele pode entrar na fila pela sua página." />
       ) : (
         <div className="table-wrap">
-          <table className="fx-table">
+          <table className="fx-table responsive">
             <thead>
               <tr>
                 <th>Dia</th>
@@ -53,18 +53,18 @@ export default async function WaitlistPage() {
                 position.set(e.date, pos);
                 return (
                   <tr key={e.id}>
-                    <td className="strong">{formatDateBR(e.date)}</td>
-                    <td className="num">{pos}º</td>
-                    <td>
+                    <td data-label="Dia" className="strong">{formatDateBR(e.date)}</td>
+                    <td data-label="Posição" className="num">{pos}º</td>
+                    <td data-label="Cliente">
                       <div className="strong">{e.client.name}</div>
                       <div className="muted xs">{formatPhone(e.client.phone)}</div>
                     </td>
-                    <td className="xs">{e.serviceIds.map((id) => services.find((s) => s.id === id)?.name).filter(Boolean).join(' + ') || '—'}</td>
-                    <td>{e.professional ? memberName(e.professional) : 'Qualquer um'}</td>
-                    <td>
+                    <td data-label="Serviços" className="xs">{e.serviceIds.map((id) => services.find((s) => s.id === id)?.name).filter(Boolean).join(' + ') || '—'}</td>
+                    <td data-label="Profissional">{e.professional ? memberName(e.professional) : 'Qualquer um'}</td>
+                    <td data-label="Status">
                       <span className={`chip ${e.status === 'NOTIFIED' ? 'success' : 'warning'}`}>{STATUS[e.status]}</span>
                     </td>
-                    <td className="num">
+                    <td className="actions num">
                       <div className="row" style={{ justifyContent: 'flex-end' }}>
                         <ButtonLink href={whatsappLink(e.client.phone, `Olá, ${e.client.name.split(' ')[0]}! Abriu um horário em ${formatDateBR(e.date)} na ${ctx.shop.name}.`)} size="sm" variant="ghost" icon="whatsapp" target="_blank">
                           Chamar

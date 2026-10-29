@@ -80,13 +80,13 @@ export default async function Page_({ searchParams }: { searchParams: Promise<Re
                       <div className="strong">{formatDateBR(z.date).slice(0, 5)} · {minuteToHHMM(z.minute)}</div>
                       <div className="muted xs">{a.source === 'MANUAL' ? 'Manual' : a.source === 'WHATSAPP' ? 'WhatsApp' : 'Online'}</div>
                     </td>
-                    <td data-label="Cliente">
+                    <td data-label="Cliente" className="col-wide">
                       <Link href={`/painel/clientes/${a.clientId}`} className="strong" style={{ color: 'var(--text)', textDecoration: 'none' }}>
                         {a.client.name}
                       </Link>
                       <div className="muted xs">{formatPhone(a.client.phone)}</div>
                     </td>
-                    <td data-label="Serviços">
+                    <td data-label="Serviços" className="col-wide">
                       {a.services.map((s) => s.name).join(' + ')}
                       {a.notes ? <div className="muted xs">“{a.notes}”</div> : null}
                     </td>
