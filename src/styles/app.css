@@ -1231,9 +1231,10 @@ img {
 .btn-icon {
   flex-shrink: 0;
 }
-/* Rótulo longo quebra linha em vez de vazar do container */
+/* Rótulo longo quebra linha em vez de vazar do container; <a> e <button> com a mesma altura */
 .btn {
   max-width: 100%;
+  line-height: 1.2;
 }
 /* Logo escuro no tema claro e branco no tema escuro */
 [data-theme='dark'] .logo-light {
@@ -1248,11 +1249,67 @@ img {
   text-align: left;
   white-space: normal;
 }
-/* Título da topbar nunca é coberto pelas ações */
+/* Topbar numa linha só: o título encolhe (com "…") e as ações ficam à direita, na mesma linha */
+.fx-topbar {
+  flex-wrap: nowrap;
+}
+.fx-topbar-title {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.fx-topbar-title > * {
+  flex-shrink: 0;
+}
 .fx-topbar-title h1 {
+  flex-shrink: 1;
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.fx-topbar-title .page-badge {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.fx-topbar-actions {
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+.fx-topbar-actions .btn {
+  position: relative;
+}
+/* Em telas estreitas, botões da topbar com ícone mostram só o ícone (o texto segue para leitores de tela) */
+@media (max-width: 600px) {
+  .fx-topbar-actions .btn:has(.btn-label) {
+    width: 40px;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .fx-topbar-actions .btn .btn-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}
+/* Telas muito estreitas (até 360px): espaços menores e sem o ícone decorativo do título */
+@media (max-width: 360px) {
+  .fx-topbar {
+    gap: var(--space-2);
+  }
+  .fx-topbar-title {
+    gap: var(--space-2);
+  }
+  .fx-topbar-actions {
+    gap: var(--space-1);
+  }
+  .fx-topbar-title > svg.fx-icon {
+    display: none;
+  }
 }
 /* Textos de mensagem (WhatsApp) com links longos quebram dentro do card */
 .msg-body {
@@ -1366,24 +1423,8 @@ img {
   .toolbar > :not(.field) {
     grid-column: 1 / -1;
   }
-  /* Topbar: título em cima, ações quebram em linhas (nada fica escondido por rolagem) */
-  .fx-topbar {
-    flex-wrap: wrap;
-    row-gap: var(--space-2);
-  }
-  .fx-topbar-title {
-    min-width: 0;
-    flex: 1;
-  }
   .fx-topbar-title .page-badge {
     display: none;
-  }
-  .fx-topbar-actions:has(.btn) {
-    width: 100%;
-  }
-  .fx-topbar-actions .btn {
-    padding-left: var(--space-3);
-    padding-right: var(--space-3);
   }
   .btn {
     white-space: normal;

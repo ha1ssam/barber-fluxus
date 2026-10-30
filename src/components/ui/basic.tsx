@@ -20,7 +20,7 @@ export function Button({ variant = 'primary', size = 'md', icon, className, chil
   return (
     <button type={type} {...rest} className={cx('btn', `btn-${variant}`, size !== 'md' && `btn-${size}`, className)}>
       {icon ? <Icon name={icon} size={size === 'sm' ? 14 : 16} /> : null}
-      {children}
+      {icon && children ? <span className="btn-label">{children}</span> : children}
     </button>
   );
 }
@@ -45,7 +45,7 @@ export function ButtonLink({
   return (
     <a href={href} target={target} rel={target ? 'noreferrer' : undefined} className={cx('btn', `btn-${variant}`, size !== 'md' && `btn-${size}`, className)}>
       {icon ? <Icon name={icon} size={size === 'sm' ? 14 : 16} /> : null}
-      {children}
+      {icon && children ? <span className="btn-label">{children}</span> : children}
     </a>
   );
 }
