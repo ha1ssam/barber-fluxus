@@ -147,7 +147,7 @@ function ServiceModal({ service, professionals, onClose }: { service: Service | 
             <Input id="price" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="45,00" />
           </Field>
           <Field label="Duração (min) *" id="duration" hint="Mínimo 10, em múltiplos de 5.">
-            <Input id="duration" type="number" min={10} step={5} value={duration} onChange={(e) => setDuration(e.target.value)} />
+            <Input id="duration" placeholder="30" type="number" min={10} step={5} value={duration} onChange={(e) => setDuration(e.target.value)} />
           </Field>
         </div>
         {professionals.length > 1 ? (

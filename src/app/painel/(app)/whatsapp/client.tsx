@@ -94,7 +94,7 @@ export function ConnectionCard({
           <div className="stack-sm">
             <p className="muted sm-text">Use um número no WhatsApp Business Platform (Meta). Cada mensagem tem custo pela Meta, sem risco de bloqueio.</p>
             <Field label="ID do número de telefone" id="pnid">
-              <Input id="pnid" value={phoneNumberId} onChange={(e) => setPhoneNumberId(e.target.value)} inputMode="numeric" />
+              <Input id="pnid" placeholder="Ex.: 123456789012345" value={phoneNumberId} onChange={(e) => setPhoneNumberId(e.target.value)} inputMode="numeric" />
             </Field>
             <Field label="Token de acesso permanente" id="token" hint="Fica guardado criptografado.">
               <Input id="token" type="password" value={token} onChange={(e) => setToken(e.target.value)} autoComplete="off" />
@@ -122,13 +122,13 @@ export function ReminderForm({ initial }: { initial: { reminderHoursBefore: numb
     <div className="stack">
       <div className="form-grid">
         <Field label="Lembrete (horas antes)" id="h" hint="De 1 a 24 horas.">
-          <Input id="h" type="number" min={1} max={24} value={c.reminderHoursBefore} onChange={(e) => setC({ ...c, reminderHoursBefore: Number(e.target.value) })} />
+          <Input id="h" placeholder="3" type="number" min={1} max={24} value={c.reminderHoursBefore} onChange={(e) => setC({ ...c, reminderHoursBefore: Number(e.target.value) })} />
         </Field>
         <Field label="Lembrete da véspera (hora)" id="eve">
-          <Input id="eve" type="number" min={8} max={22} value={c.reminderEveHour} onChange={(e) => setC({ ...c, reminderEveHour: Number(e.target.value) })} />
+          <Input id="eve" placeholder="20" type="number" min={8} max={22} value={c.reminderEveHour} onChange={(e) => setC({ ...c, reminderEveHour: Number(e.target.value) })} />
         </Field>
         <Field label="Cliente sumido após (dias)" id="wb">
-          <Input id="wb" type="number" min={15} max={365} value={c.winbackDays} onChange={(e) => setC({ ...c, winbackDays: Number(e.target.value) })} />
+          <Input id="wb" placeholder="45" type="number" min={15} max={365} value={c.winbackDays} onChange={(e) => setC({ ...c, winbackDays: Number(e.target.value) })} />
         </Field>
       </div>
       <div className="row" style={{ justifyContent: 'flex-end' }}>
@@ -162,7 +162,7 @@ export function TemplateEditor({ kind, label, description, enabled, body, defaul
       </div>
       {open ? (
         <div className="stack-sm" style={{ marginTop: 8 }}>
-          <Textarea rows={4} value={text} onChange={(e) => setText(e.target.value)} aria-label={`Texto: ${label}`} />
+          <Textarea rows={4} placeholder="Escreva a mensagem. Use {nome}, {data}, {hora}..." value={text} onChange={(e) => setText(e.target.value)} aria-label={`Texto: ${label}`} />
           <div className="row" style={{ justifyContent: 'flex-end' }}>
             <Button size="sm" variant="ghost" onClick={() => setText(defaultBody)}>
               Restaurar padrão

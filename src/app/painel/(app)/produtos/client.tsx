@@ -84,10 +84,10 @@ function ProductModal({ product, onClose }: { product: Product | null; onClose: 
       <div className="stack">
         {error ? <p className="field-error">{error}</p> : null}
         <Field label="Nome" id="name">
-          <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+          <Input id="name" placeholder="Ex.: Pomada modeladora" value={name} onChange={(e) => setName(e.target.value)} />
         </Field>
         <Field label="Preço (R$)" id="price">
-          <Input id="price" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} />
+          <Input id="price" placeholder="0,00" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} />
         </Field>
       </div>
     </Modal>

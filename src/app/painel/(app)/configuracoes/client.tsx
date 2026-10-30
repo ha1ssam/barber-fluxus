@@ -112,14 +112,14 @@ export function ShopForm({ initial, appUrl }: { initial: ShopData; appUrl: strin
         <div className="stack">
           <div className="form-grid">
             <Field label="Nome do negócio *" id="name">
-              <Input id="name" value={d.name} onChange={set('name')} />
+              <Input id="name" placeholder="Ex.: Barbearia do Zé" value={d.name} onChange={set('name')} />
             </Field>
             <Field label="Tipo" id="bt">
               <Select id="bt" value={d.businessType} onChange={set('businessType')} options={Object.entries(BUSINESS_LABELS).map(([value, label]) => ({ value, label }))} />
             </Field>
           </div>
           <Field label="Endereço da sua página" id="slug" hint={`${appUrl.replace(/^https?:\/\//, '')}/${d.slug}`}>
-            <Input id="slug" value={d.slug} onChange={(e) => setD({ ...d, slug: slugify(e.target.value) })} />
+            <Input id="slug" placeholder="minha-barbearia" value={d.slug} onChange={(e) => setD({ ...d, slug: slugify(e.target.value) })} />
           </Field>
           <Field label="Descrição" id="desc">
             <Textarea id="desc" rows={3} value={d.description} onChange={set('description')} placeholder="Conte o que faz sua loja especial" />
@@ -134,10 +134,10 @@ export function ShopForm({ initial, appUrl }: { initial: ShopData; appUrl: strin
         <div className="stack">
           <div className="form-grid">
             <Field label="WhatsApp da loja" id="phone">
-              <Input id="phone" type="tel" value={d.phone} onChange={set('phone')} />
+              <Input id="phone" placeholder="(11) 98765-4321" type="tel" value={d.phone} onChange={set('phone')} />
             </Field>
             <Field label="E-mail" id="email">
-              <Input id="email" type="email" value={d.email} onChange={set('email')} />
+              <Input id="email" placeholder="contato@sualoja.com.br" type="email" value={d.email} onChange={set('email')} />
             </Field>
           </div>
           <div className="form-grid">
@@ -145,7 +145,7 @@ export function ShopForm({ initial, appUrl }: { initial: ShopData; appUrl: strin
               <Input id="addr" value={d.addressLine} onChange={set('addressLine')} placeholder="Rua, número" />
             </Field>
             <Field label="Bairro" id="nb">
-              <Input id="nb" value={d.neighborhood} onChange={set('neighborhood')} />
+              <Input id="nb" placeholder="Ex.: Centro" value={d.neighborhood} onChange={set('neighborhood')} />
             </Field>
           </div>
           <div className="form-grid">
@@ -153,7 +153,7 @@ export function ShopForm({ initial, appUrl }: { initial: ShopData; appUrl: strin
               <Select id="uf" value={d.state} onChange={(e) => setD({ ...d, state: e.target.value, city: '' })} options={[{ value: '', label: 'Escolha' }, ...UFS]} />
             </Field>
             <Field label="Cidade" id="city">
-              <Input id="city" value={d.city} onChange={set('city')} list="ibge-cities" autoComplete="off" />
+              <Input id="city" placeholder="Ex.: São Paulo" value={d.city} onChange={set('city')} list="ibge-cities" autoComplete="off" />
               <datalist id="ibge-cities">
                 {cities.map((c) => (
                   <option key={c} value={c} />
@@ -161,7 +161,7 @@ export function ShopForm({ initial, appUrl }: { initial: ShopData; appUrl: strin
               </datalist>
             </Field>
             <Field label="CEP" id="cep">
-              <Input id="cep" value={d.zipCode} onChange={set('zipCode')} inputMode="numeric" />
+              <Input id="cep" placeholder="00000-000" value={d.zipCode} onChange={set('zipCode')} inputMode="numeric" />
             </Field>
           </div>
           <p className="field-hint">Sua loja aparece em Explorar quando tem endereço e serviços cadastrados.</p>
@@ -186,7 +186,7 @@ export function ShopForm({ initial, appUrl }: { initial: ShopData; appUrl: strin
               <Input id="ig" value={d.instagram} onChange={set('instagram')} placeholder="@sualoja" />
             </Field>
             <Field label="Facebook (link)" id="fb">
-              <Input id="fb" value={d.facebook} onChange={set('facebook')} />
+              <Input id="fb" placeholder="facebook.com/sualoja" value={d.facebook} onChange={set('facebook')} />
             </Field>
             <Field label="TikTok" id="tt">
               <Input id="tt" value={d.tiktok} onChange={set('tiktok')} placeholder="@sualoja" />
@@ -290,15 +290,15 @@ export function AgendaForm({ initial }: { initial: { slotInterval: number; buffe
             <Select id="grid" value={String(c.slotInterval)} onChange={(e) => setC({ ...c, slotInterval: Number(e.target.value) })} options={['10', '15', '20', '30'].map((v) => ({ value: v, label: `A cada ${v} minutos` }))} />
           </Field>
           <Field label="Intervalo entre clientes (min)" id="buf" hint="Tempo livre depois de cada atendimento.">
-            <Input id="buf" type="number" min={0} max={60} step={5} value={c.bufferMinutes} onChange={(e) => setC({ ...c, bufferMinutes: Number(e.target.value) })} />
+            <Input id="buf" placeholder="0" type="number" min={0} max={60} step={5} value={c.bufferMinutes} onChange={(e) => setC({ ...c, bufferMinutes: Number(e.target.value) })} />
           </Field>
         </div>
         <div className="form-grid">
           <Field label="Antecedência mínima (min)" id="adv" hint="Ex.: 30 = ninguém reserva para daqui a 10 minutos.">
-            <Input id="adv" type="number" min={0} step={15} value={c.minAdvanceMinutes} onChange={(e) => setC({ ...c, minAdvanceMinutes: Number(e.target.value) })} />
+            <Input id="adv" placeholder="30" type="number" min={0} step={15} value={c.minAdvanceMinutes} onChange={(e) => setC({ ...c, minAdvanceMinutes: Number(e.target.value) })} />
           </Field>
           <Field label="Reservas até quantos dias à frente" id="max">
-            <Input id="max" type="number" min={1} max={365} value={c.maxAdvanceDays} onChange={(e) => setC({ ...c, maxAdvanceDays: Number(e.target.value) })} />
+            <Input id="max" placeholder="60" type="number" min={1} max={365} value={c.maxAdvanceDays} onChange={(e) => setC({ ...c, maxAdvanceDays: Number(e.target.value) })} />
           </Field>
           <Field label="Fuso horário" id="tz">
             <Select id="tz" value={c.timezone} onChange={(e) => setC({ ...c, timezone: e.target.value })} options={TIMEZONES.map((t) => ({ value: t, label: t.replace('America/', '').replace('_', ' ') }))} />
@@ -328,10 +328,10 @@ export function AccountForm({ initial, hasPassword, isOwner }: { initial: { name
       <Card title="Perfil">
         <div className="stack">
           <Field label="Nome" id="n">
-            <Input id="n" value={p.name} onChange={(e) => setP({ ...p, name: e.target.value })} />
+            <Input id="n" placeholder="Seu nome" value={p.name} onChange={(e) => setP({ ...p, name: e.target.value })} />
           </Field>
           <Field label="WhatsApp" id="ph">
-            <Input id="ph" type="tel" value={p.phone} onChange={(e) => setP({ ...p, phone: e.target.value })} />
+            <Input id="ph" placeholder="(11) 98765-4321" type="tel" value={p.phone} onChange={(e) => setP({ ...p, phone: e.target.value })} />
           </Field>
           <Field label="E-mail" id="em" hint="Para trocar o e-mail, fale com o suporte.">
             <Input id="em" value={p.email} disabled />

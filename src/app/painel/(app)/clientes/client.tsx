@@ -21,8 +21,8 @@ export function ClientFilters({ values, winbackDays }: { values: { q: string; fi
   });
   return (
     <div className="toolbar">
-      <Field label="Buscar" id="q">
-        <Input id="q" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Nome, telefone ou e-mail" style={{ minWidth: 240 }} />
+      <Field label="Buscar" id="q" className="field-search">
+        <Input id="q" value={q} onChange={(e) => setQ(e.target.value)} type="search" placeholder="Nome, telefone ou e-mail" />
       </Field>
       <Field label="Filtro" id="filtro">
         <Select
@@ -97,7 +97,7 @@ export function ClientModal({ initial, onClose }: { initial?: ClientForm; onClos
       <div className="stack">
         {error ? <p className="field-error">{error}</p> : null}
         <Field label="Nome *" id="name">
-          <Input id="name" value={f.name} onChange={set('name')} />
+          <Input id="name" placeholder="Nome e sobrenome" value={f.name} onChange={set('name')} />
         </Field>
         <div className="form-grid">
           <Field label="Telefone *" id="phone">
@@ -108,7 +108,7 @@ export function ClientModal({ initial, onClose }: { initial?: ClientForm; onClos
           </Field>
         </div>
         <Field label="E-mail" id="email">
-          <Input id="email" type="email" value={f.email} onChange={set('email')} />
+          <Input id="email" placeholder="cliente@email.com" type="email" value={f.email} onChange={set('email')} />
         </Field>
         <Field label="Observações" id="notes">
           <Textarea id="notes" rows={3} value={f.notes} onChange={set('notes')} placeholder="Ex.: prefere máquina 2" />

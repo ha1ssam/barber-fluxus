@@ -15,16 +15,16 @@ export function LoyaltyConfigForm({ initial }: { initial: Config }) {
       <Toggle label="Cartão fidelidade ligado" checked={c.loyaltyEnabled} onChange={(e) => setC({ ...c, loyaltyEnabled: e.target.checked })} />
       <div className="form-grid">
         <Field label="Selos para o prêmio" id="req" hint="1 selo por atendimento concluído.">
-          <Input id="req" type="number" min={2} max={50} value={c.loyaltyStampsRequired} onChange={(e) => setC({ ...c, loyaltyStampsRequired: Number(e.target.value) })} />
+          <Input id="req" placeholder="10" type="number" min={2} max={50} value={c.loyaltyStampsRequired} onChange={(e) => setC({ ...c, loyaltyStampsRequired: Number(e.target.value) })} />
         </Field>
         <Field label="Prêmio" id="reward" hint="No caixa, o prêmio desconta o serviço mais caro.">
-          <Input id="reward" value={c.loyaltyReward} onChange={(e) => setC({ ...c, loyaltyReward: e.target.value })} />
+          <Input id="reward" placeholder="Ex.: 1 corte grátis" value={c.loyaltyReward} onChange={(e) => setC({ ...c, loyaltyReward: e.target.value })} />
         </Field>
       </div>
       <hr className="divider" />
       <Toggle label="Programa de indicação ligado" checked={c.referralEnabled} onChange={(e) => setC({ ...c, referralEnabled: e.target.checked })} />
       <Field label="Selos ganhos por indicação" id="bonus" hint="Quem indicou ganha quando o indicado conclui o primeiro atendimento.">
-        <Input id="bonus" type="number" min={0} max={10} value={c.referralBonusStamps} onChange={(e) => setC({ ...c, referralBonusStamps: Number(e.target.value) })} />
+        <Input id="bonus" placeholder="1" type="number" min={0} max={10} value={c.referralBonusStamps} onChange={(e) => setC({ ...c, referralBonusStamps: Number(e.target.value) })} />
       </Field>
       <div className="row" style={{ justifyContent: 'flex-end' }}>
         <Button disabled={pending} onClick={() => run(() => saveLoyaltyAction(c))}>
@@ -52,13 +52,13 @@ export function CouponForm() {
           <Select id="type" value={type} onChange={(e) => setType(e.target.value)} options={[{ value: 'PERCENT', label: 'Percentual (%)' }, { value: 'FIXED', label: 'Valor (R$)' }]} />
         </Field>
         <Field label={type === 'PERCENT' ? 'Desconto (%)' : 'Desconto (R$)'} id="value">
-          <Input id="value" inputMode="decimal" value={value} onChange={(e) => setValue(e.target.value)} style={{ width: 120 }} />
+          <Input id="value" placeholder="Ex.: 10" inputMode="decimal" value={value} onChange={(e) => setValue(e.target.value)} />
         </Field>
         <Field label="Válido até" id="valid">
           <Input id="valid" type="date" value={validUntil} onChange={(e) => setValidUntil(e.target.value)} />
         </Field>
         <Field label="Limite de usos" id="max">
-          <Input id="max" type="number" min={1} value={maxUses} onChange={(e) => setMaxUses(e.target.value)} placeholder="Sem limite" style={{ width: 130 }} />
+          <Input id="max" type="number" min={1} value={maxUses} onChange={(e) => setMaxUses(e.target.value)} placeholder="Sem limite" />
         </Field>
         <Button
           icon="plus"

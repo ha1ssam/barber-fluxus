@@ -74,9 +74,9 @@ export function IconButton({
   );
 }
 
-export function Field({ label, id, hint, error, children }: { label?: string; id?: string; hint?: ReactNode; error?: string; children: ReactNode }) {
+export function Field({ label, id, hint, error, className, children }: { label?: string; id?: string; hint?: ReactNode; error?: string; className?: string; children: ReactNode }) {
   return (
-    <div className="field">
+    <div className={cx('field', className)}>
       {label ? (
         <label className="field-label" htmlFor={id}>
           {label}

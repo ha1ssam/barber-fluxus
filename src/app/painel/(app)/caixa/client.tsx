@@ -16,7 +16,7 @@ export function DateNav({ date, today }: { date: string; today: string }) {
   return (
     <div className="row">
       <IconButton icon="chevron-left" label="Dia anterior" onClick={() => go(addDays(date, -1))} />
-      <Input type="date" value={date} max={today} onChange={(e) => e.target.value && go(e.target.value)} style={{ width: 170 }} aria-label="Data" />
+      <Input type="date" value={date} max={today} onChange={(e) => e.target.value && go(e.target.value)} className="input-date-nav" aria-label="Data" />
       <IconButton icon="chevron-right" label="Próximo dia" onClick={() => date < today && go(addDays(date, 1))} />
       <Button size="sm" variant="ghost" disabled={date === today} onClick={() => go(today)}>
         Hoje
@@ -91,10 +91,10 @@ export function CashActions({ registerOpen, expectedCash, isToday }: { registerO
           <div className="stack">
             <p className="sm-text">Esperado na gaveta: <span className="strong">{formatBRL(expectedCash ?? 0)}</span></p>
             <Field label="Valor contado (R$)" id="amount" error={error ?? undefined}>
-              <Input id="amount" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
+              <Input id="amount" placeholder="0,00" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
             </Field>
             <Field label="Observações" id="notes">
-              <Textarea id="notes" rows={2} value={desc} onChange={(e) => setDesc(e.target.value)} />
+              <Textarea id="notes" placeholder="Ex.: faltou troco de R$ 5,00" rows={2} value={desc} onChange={(e) => setDesc(e.target.value)} />
             </Field>
           </div>
         </Modal>
@@ -122,7 +122,7 @@ export function CashActions({ registerOpen, expectedCash, isToday }: { registerO
             />
             {error ? <p className="field-error">{error}</p> : null}
             <Field label="Valor (R$)" id="amount">
-              <Input id="amount" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
+              <Input id="amount" placeholder="0,00" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
             </Field>
             <Field label="Descrição" id="desc">
               <Input id="desc" value={desc} onChange={(e) => setDesc(e.target.value)} placeholder={type === 'EXPENSE' ? 'Ex.: produtos de limpeza' : type === 'WITHDRAWAL' ? 'Ex.: depósito no banco' : 'Ex.: troco extra'} />

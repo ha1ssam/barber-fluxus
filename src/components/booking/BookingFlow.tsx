@@ -241,7 +241,7 @@ export function BookingFlow(props: {
           <h2 className="section-title">Seus dados</h2>
           <div className="form-grid">
             <Field label="Nome *" id="bk-name">
-              <Input id="bk-name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
+              <Input id="bk-name" placeholder="Nome e sobrenome" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
             </Field>
             <Field label="WhatsApp *" id="bk-phone" hint="Para confirmação e lembrete.">
               <Input id="bk-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" placeholder="(11) 98765-4321" />
@@ -315,8 +315,8 @@ export function BookingFlow(props: {
           {waitDone === null ? (
             <div className="stack">
               <p className="sm-text">Se um horário vagar nesse dia, você recebe um aviso no WhatsApp.</p>
-              <Field label="Nome" id="w-name"><Input id="w-name" value={name} onChange={(e) => setName(e.target.value)} /></Field>
-              <Field label="WhatsApp" id="w-phone"><Input id="w-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} /></Field>
+              <Field label="Nome" id="w-name"><Input id="w-name" placeholder="Nome e sobrenome" value={name} onChange={(e) => setName(e.target.value)} /></Field>
+              <Field label="WhatsApp" id="w-phone"><Input id="w-phone" placeholder="(11) 98765-4321" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} /></Field>
               {error ? <p className="field-error">{error}</p> : null}
             </div>
           ) : (

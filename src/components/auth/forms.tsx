@@ -60,6 +60,7 @@ export function LoginForm({ next, googleEnabled, notice }: { next?: string; goog
         type="password"
         autoComplete="current-password"
         required
+        placeholder="Sua senha"
         aside={
           <Link className="fx-auth-link" href="/recuperar-senha">
             Esqueci minha senha
@@ -110,8 +111,8 @@ export function SignupForm({ next, initialKind, googleEnabled }: { next?: string
       <Feedback state={state} />
       <input type="hidden" name="kind" value={kind} />
       <input type="hidden" name="next" value={next ?? ''} />
-      <Field label="Seu nome" id="name" name="name" autoComplete="name" required />
-      <Field label="E-mail" id="email" name="email" type="email" autoComplete="email" required />
+      <Field label="Seu nome" id="name" name="name" autoComplete="name" required placeholder="Nome e sobrenome" />
+      <Field label="E-mail" id="email" name="email" type="email" autoComplete="email" required placeholder="voce@email.com" />
       <Field label="WhatsApp" id="phone" name="phone" type="tel" autoComplete="tel" required placeholder="(11) 98765-4321" />
       {kind === 'owner' ? (
         <>
@@ -131,7 +132,7 @@ export function SignupForm({ next, initialKind, googleEnabled }: { next?: string
           <Field label="CPF" id="cpf" name="cpf" inputMode="numeric" required placeholder="000.000.000-00" />
         </>
       ) : null}
-      <Field label="Senha" id="password" name="password" type="password" autoComplete="new-password" required minLength={8} />
+      <Field label="Senha" id="password" name="password" type="password" autoComplete="new-password" required minLength={8} placeholder="Mínimo de 8 caracteres" />
       <button className="fx-auth-btn" type="submit" disabled={pending}>
         {pending ? 'Criando...' : kind === 'owner' ? 'Começar teste grátis' : 'Criar conta'}
       </button>
@@ -157,7 +158,7 @@ export function RequestResetForm() {
         <p className="fx-auth-sub">Enviamos um link para você criar uma senha nova.</p>
       </div>
       <Feedback state={state} />
-      <Field label="E-mail" id="email" name="email" type="email" autoComplete="email" required />
+      <Field label="E-mail" id="email" name="email" type="email" autoComplete="email" required placeholder="voce@email.com" />
       <button className="fx-auth-btn" type="submit" disabled={pending}>
         {pending ? 'Enviando...' : 'Enviar link'}
       </button>
@@ -178,8 +179,8 @@ export function ResetPasswordForm({ token }: { token: string }) {
       </div>
       <Feedback state={state} />
       <input type="hidden" name="token" value={token} />
-      <Field label="Nova senha" id="password" name="password" type="password" autoComplete="new-password" required minLength={8} />
-      <Field label="Repita a senha" id="confirm" name="confirm" type="password" autoComplete="new-password" required minLength={8} />
+      <Field label="Nova senha" id="password" name="password" type="password" autoComplete="new-password" required minLength={8} placeholder="Mínimo de 8 caracteres" />
+      <Field label="Repita a senha" id="confirm" name="confirm" type="password" autoComplete="new-password" required minLength={8} placeholder="Digite a senha de novo" />
       <button className="fx-auth-btn" type="submit" disabled={pending}>
         {pending ? 'Salvando...' : 'Salvar senha'}
       </button>

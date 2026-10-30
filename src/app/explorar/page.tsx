@@ -50,11 +50,11 @@ export default async function ExplorePage({ searchParams }: { searchParams: Prom
           </div>
           <div className="field">
             <label className="field-label" htmlFor="cidade">Cidade</label>
-            <input id="cidade" name="cidade" className="form-input" defaultValue={sp.cidade ?? ''} />
+            <input id="cidade" placeholder="Ex.: São Paulo" name="cidade" className="form-input" defaultValue={sp.cidade ?? ''} />
           </div>
-          <div className="field">
+          <div className="field field-search">
             <label className="field-label" htmlFor="q">Nome</label>
-            <input id="q" name="q" className="form-input" defaultValue={sp.q ?? ''} />
+            <input id="q" placeholder="Nome da barbearia" name="q" className="form-input" defaultValue={sp.q ?? ''} />
           </div>
           <button className="btn btn-primary" type="submit"><Icon name="search" size={16} /> Buscar</button>
         </form>

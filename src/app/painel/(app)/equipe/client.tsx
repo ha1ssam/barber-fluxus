@@ -133,7 +133,7 @@ export function MemberRow({ member, isSelf }: { member: Member; isSelf: boolean 
                   </Field>
                   {m.commissionType !== 'DEFAULT' && m.commissionType !== 'NONE' ? (
                     <Field label={m.commissionType === 'PERCENT' ? 'Percentual (%)' : m.commissionType === 'FIXED' ? 'Valor por serviço (R$)' : 'Aluguel mensal (R$)'} id="cv">
-                      <Input id="cv" inputMode="decimal" value={value} onChange={(e) => setValue(e.target.value)} />
+                      <Input id="cv" placeholder="Ex.: 40" inputMode="decimal" value={value} onChange={(e) => setValue(e.target.value)} />
                     </Field>
                   ) : null}
                 </div>
@@ -155,7 +155,7 @@ export function InviteForm() {
     <div className="stack-sm">
       <div className="form-grid">
         <Field label="E-mail da pessoa" id="email">
-          <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input id="email" placeholder="pessoa@email.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </Field>
         <Field label="Papel" id="role">
           <Select id="role" value={role} onChange={(e) => setRole(e.target.value)} options={[{ value: 'BARBER', label: 'Profissional' }, { value: 'RECEPTIONIST', label: 'Recepcionista (não conta no limite)' }]} />
@@ -199,11 +199,11 @@ export function ShopCommissionForm({ initial }: { initial: { type: string; value
         </Field>
         {type !== 'NONE' ? (
           <Field label={type === 'PERCENT' ? 'Percentual (%)' : type === 'FIXED' ? 'Valor por serviço (R$)' : 'Aluguel mensal (R$)'} id="v">
-            <Input id="v" inputMode="decimal" value={value} onChange={(e) => setValue(e.target.value)} />
+            <Input id="v" placeholder="Ex.: 40" inputMode="decimal" value={value} onChange={(e) => setValue(e.target.value)} />
           </Field>
         ) : null}
         <Field label="Comissão sobre produtos (%)" id="p">
-          <Input id="p" inputMode="decimal" value={prod} onChange={(e) => setProd(e.target.value)} />
+          <Input id="p" placeholder="0" inputMode="decimal" value={prod} onChange={(e) => setProd(e.target.value)} />
         </Field>
       </div>
       <div className="row" style={{ justifyContent: 'flex-end' }}>

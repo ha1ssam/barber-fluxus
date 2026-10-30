@@ -10,7 +10,7 @@ export function MonthNav({ month }: { month: string }) {
   return (
     <div className="row">
       <IconButton icon="chevron-left" label="Mês anterior" onClick={() => go(addMonths(`${month}-01`, -1).slice(0, 7))} />
-      <Input type="month" value={month} onChange={(e) => e.target.value && go(e.target.value)} style={{ width: 170 }} aria-label="Mês" />
+      <Input type="month" value={month} onChange={(e) => e.target.value && go(e.target.value)} className="input-date-nav" aria-label="Mês" />
       <IconButton icon="chevron-right" label="Próximo mês" onClick={() => go(addMonths(`${month}-01`, 1).slice(0, 7))} />
     </div>
   );
